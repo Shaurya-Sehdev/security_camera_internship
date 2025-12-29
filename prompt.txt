@@ -1,0 +1,11 @@
+python slide_processor
+.py "C:\Shaurya\BACK-END\security_camera\public\videos\slow_temp_chunks\slow_chunk_0000.mp4"
+Checking connectivity to the model hosters, this may take a while. To bypass this check, set `DISABLE_MODEL_SOURCE_CHECK` to `True`.      
+C:\Shaurya\BACK-END\security_camera\slide_processor.py:26: DeprecationWarning: The parameter `use_angle_cls` has been deprecated and will be removed in the future. Please use `use_textline_orientation` instead.
+  self.ocr = PaddleOCR(use_angle_cls=True, lang='en', show_log=False)
+{
+  "success": false,
+  "error": "Unknown argument: show_log",
+  "video_path": "C:\\Shaurya\\BACK-END\\security_camera\\public\\videos\\slow_temp_chunks\\slow_chunk_0000.mp4"
+}
+(base) PS C:\Shaurya\BACK-END\security_camera> 

@@ -1,0 +1,10 @@
+type wsl in 1 terminal then copy paste these then open new terminal to do rest of the work.
+
+sudo sed -i '/^bind/d' /etc/redis/redis.conf
+sudo sed -i '/^protected-mode/d' /etc/redis/redis.conf
+
+# 3. Add the clean configuration ONE TIME (wrapped in wsl sudo bash -c)
+sudo bash -c 'echo "bind 0.0.0.0" >> /etc/redis/redis.conf && echo "protected-mode no" >> /etc/redis/redis.conf'
+
+# 4. Start Redis
+sudo service redis-server start

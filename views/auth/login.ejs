@@ -1,0 +1,585 @@
+<%- include('../partials/head') %>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* Advanced gradient background inspired by Mercedes F1 */
+  .gradient-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: 
+      radial-gradient(ellipse at top left, rgba(0, 255, 229, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at top right, rgba(0, 184, 212, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom center, rgba(0, 230, 255, 0.05) 0%, transparent 60%),
+      linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+  }
+  
+  /* Metallic shimmer effect */
+  .metallic-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: linear-gradient(
+      145deg,
+      transparent 0%,
+      rgba(192, 192, 192, 0.02) 25%,
+      transparent 50%,
+      rgba(192, 192, 192, 0.02) 75%,
+      transparent 100%
+    );
+    animation: shimmer 8s linear infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 20px 60px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Premium glow effects */
+  .bg-decoration {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .bg-glow-1 {
+    top: 10%;
+    left: 15%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(0, 255, 229, 0.15) 0%, rgba(0, 230, 250, 0.08) 40%, transparent 70%);
+    filter: blur(90px);
+    animation: pulse 10s ease-in-out infinite;
+  }
+  
+  .bg-glow-2 {
+    bottom: 10%;
+    right: 15%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 200, 220, 0.12) 0%, rgba(0, 184, 212, 0.06) 40%, transparent 70%);
+    filter: blur(80px);
+    animation: pulse 10s ease-in-out infinite 3s;
+  }
+  
+  .bg-glow-3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(192, 192, 192, 0.03) 0%, transparent 60%);
+    filter: blur(100px);
+    animation: rotate 20s linear infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.15); }
+  }
+  
+  @keyframes rotate {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  
+  /* Floating particles with metallic tint */
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+  }
+  
+  .particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(0, 255, 229, 0.5);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 255, 229, 0.6);
+    animation: float 18s linear infinite;
+  }
+  
+  .particle:nth-child(odd) {
+    background: rgba(192, 192, 192, 0.4);
+    box-shadow: 0 0 6px rgba(192, 192, 192, 0.5);
+  }
+  
+  .particle:nth-child(1) { left: 5%; animation-delay: 0s; }
+  .particle:nth-child(2) { left: 15%; animation-delay: 2s; }
+  .particle:nth-child(3) { left: 25%; animation-delay: 4s; }
+  .particle:nth-child(4) { left: 35%; animation-delay: 1s; }
+  .particle:nth-child(5) { left: 45%; animation-delay: 3s; }
+  .particle:nth-child(6) { left: 55%; animation-delay: 5s; }
+  .particle:nth-child(7) { left: 65%; animation-delay: 2.5s; }
+  .particle:nth-child(8) { left: 75%; animation-delay: 4.5s; }
+  .particle:nth-child(9) { left: 85%; animation-delay: 1.5s; }
+  .particle:nth-child(10) { left: 95%; animation-delay: 3.5s; }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(100vh) scale(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100px) scale(1.5);
+      opacity: 0;
+    }
+  }
+  
+  /* Premium login container with metallic accents */
+  .login-container {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(20, 20, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 55px 45px;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 0 30px rgba(255, 255, 255, 0.06),
+    0 0 60px rgba(0, 255, 229, 0.08),
+    inset 0 0 10px rgba(255, 255, 255, 0.04);
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeInUp 1.2s ease forwards 0.3s;
+}
+
+/* Gentle metallic light edge */
+.login-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 1px; /* Subtle outline padding */
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(0, 255, 229, 0.2),
+    rgba(255, 255, 255, 0.15)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.login-container::after {
+  content: '';
+  position: absolute;
+  inset: -25px;
+  border-radius: 40px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+  filter: blur(25px);
+  z-index: -1;
+}
+
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Premium icon with metallic gradient */
+  .login-icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 35px;
+    background: linear-gradient(135deg, #00ffe5 0%, #00d4e0 25%, #c0c0c0 50%, #00d4e0 75%, #00b8d4 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.8rem;
+    box-shadow: 
+      0 10px 40px rgba(0, 255, 229, 0.4),
+      0 0 20px rgba(192, 192, 192, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    animation: iconPulse 4s ease-in-out infinite;
+    position: relative;
+  }
+  
+  .login-icon::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, transparent, rgba(0, 255, 229, 0.3), transparent);
+    animation: iconRotate 3s linear infinite;
+    z-index: -1;
+  }
+  
+  @keyframes iconPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 10px 40px rgba(0, 255, 229, 0.4); }
+    50% { transform: scale(1.08); box-shadow: 0 15px 50px rgba(0, 255, 229, 0.6); }
+  }
+  
+  @keyframes iconRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .form-title {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: -1.5px;
+    background: linear-gradient(135deg, #00ffe5 0%, #00e6f0 30%, #c0c0c0 50%, #00d4e0 70%, #00b8d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    text-shadow: 0 0 50px rgba(0, 255, 229, 0.3);
+    animation: titleShimmer 3s ease-in-out infinite;
+  }
+  
+  @keyframes titleShimmer {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.2); }
+  }
+  
+  .form-subtitle {
+    text-align: center;
+    font-size: 1.05rem;
+    color: #a0a0a0;
+    margin-bottom: 45px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+  
+  .form-group {
+    margin-bottom: 28px;
+  }
+  
+  .form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #00ffe5;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 10px rgba(0, 255, 229, 0.3);
+  }
+  
+  .label-icon {
+    margin-right: 8px;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 229, 0.5));
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 18px 22px;
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
+    border: 1px solid rgba(0, 255, 229, 0.3);
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.4s ease;
+    outline: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .form-input::placeholder {
+    color: #555555;
+  }
+  
+  .form-input:focus {
+    border-color: #00ffe5;
+    background: linear-gradient(
+      145deg,
+      rgba(0, 255, 229, 0.1) 0%,
+      rgba(0, 0, 0, 0.4) 100%
+    );
+    box-shadow: 
+      0 0 25px rgba(0, 255, 229, 0.3),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .btn-login {
+    width: 100%;
+    padding: 20px 35px;
+    background: linear-gradient(135deg, #00ffe5 0%, #00d8e5 25%, #c0c0c0 50%, #00d0e0 75%, #00b8d4 100%);
+    color: #000000;
+    font-size: 1.25rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 
+      0 8px 30px rgba(0, 255, 229, 0.5),
+      0 0 20px rgba(192, 192, 192, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+    margin-top: 15px;
+  }
+  
+  .btn-login::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transition: left 0.6s;
+  }
+  
+  .btn-login:hover::before {
+    left: 100%;
+  }
+  
+  .btn-login:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 12px 45px rgba(0, 255, 229, 0.7),
+      0 0 30px rgba(192, 192, 192, 0.5);
+  }
+  
+  .btn-login:active {
+    transform: translateY(-2px);
+  }
+  
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 35px 0;
+    color: #666666;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 255, 229, 0.3),
+      rgba(192, 192, 192, 0.2),
+      rgba(0, 255, 229, 0.3),
+      transparent
+    );
+  }
+  
+  .divider span {
+    padding: 0 20px;
+  }
+  
+  .signup-prompt {
+    text-align: center;
+    font-size: 1rem;
+    color: #999999;
+    margin-top: 30px;
+  }
+  
+  .signup-link {
+    color: #00ffe5;
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(0, 255, 229, 0.3);
+  }
+  
+  .signup-link:hover {
+    border-bottom-color: #00ffe5;
+    text-shadow: 0 0 15px rgba(0, 255, 229, 0.6);
+  }
+  
+  .security-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding: 14px;
+    background: linear-gradient(
+      145deg,
+      rgba(0, 255, 229, 0.08) 0%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
+    border: 1px solid rgba(0, 255, 229, 0.2);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #00ffe5;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  .security-icon {
+    font-size: 1.3rem;
+    filter: drop-shadow(0 0 8px rgba(0, 255, 229, 0.5));
+  }
+  
+  @media (max-width: 768px) {
+    main {
+      padding: 40px 15px;
+    }
+    
+    .login-container {
+      padding: 45px 35px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .login-container {
+      padding: 40px 30px;
+    }
+    
+    .form-title {
+      font-size: 2rem;
+    }
+    
+    .btn-login {
+      font-size: 1.1rem;
+      padding: 18px 30px;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Premium gradient background -->
+  <div class="gradient-bg"></div>
+  <div class="metallic-overlay"></div>
+  
+  <!-- Premium glow effects -->
+  <div class="bg-decoration bg-glow-1"></div>
+  <div class="bg-decoration bg-glow-2"></div>
+  <div class="bg-decoration bg-glow-3"></div>
+  
+  <!-- Floating particles -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+  
+  <%- include('../partials/nav') %>
+
+  <main>
+    <div class="login-container">
+      
+      <h1 class="form-title">Welcome Back</h1>
+      <p class="form-subtitle">Access your secure surveillance dashboard</p>
+
+      <form action="/login" method="POST">
+        <div class="form-group">
+          <label for="email" class="form-label">
+            <span class="label-icon">📧</span>
+            Email Address
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="your.email@example.com"
+            required
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">
+            <span class="label-icon">🔑</span>
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your secure password"
+            required
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn-login">
+            Login
+          </button>
+        </div>
+      </form>
+
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <p class="signup-prompt">
+        New to SocTeamUp? 
+        <a href="/signup" class="signup-link">Create an account</a>
+      </p>
+      
+      <div class="security-badge">
+        <span>Secured with end-to-end encryption</span>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

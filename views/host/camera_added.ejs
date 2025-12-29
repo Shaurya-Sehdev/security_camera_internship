@@ -1,0 +1,525 @@
+<%- include("../partials/head") %>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #000000;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+  
+  /* Animated Background Decorations */
+  .bg-decoration {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .bg-glow-1 {
+    top: 10%;
+    left: 10%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, transparent 70%);
+    filter: blur(100px);
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .bg-glow-2 {
+    bottom: 10%;
+    right: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 255, 229, 0.15) 0%, transparent 70%);
+    filter: blur(90px);
+    animation: float 10s ease-in-out infinite reverse;
+  }
+  
+  .bg-glow-3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(0, 184, 212, 0.1) 0%, transparent 70%);
+    filter: blur(120px);
+    animation: pulse 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(30px, -30px) scale(1.1);
+    }
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.3;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+  }
+  
+  /* Particle Effect */
+  .particle {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: rgba(0, 255, 229, 0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: particleFloat 15s linear infinite;
+  }
+  
+  @keyframes particleFloat {
+    0% {
+      transform: translateY(100vh) translateX(0) scale(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100vh) translateX(100px) scale(1);
+      opacity: 0;
+    }
+  }
+  
+  .success-container {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(0, 255, 136, 0.3);
+    border-radius: 32px;
+    padding: 60px 50px;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+      0 20px 60px rgba(0, 255, 136, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    animation: slideUpFadeIn 1s ease forwards;
+    overflow: hidden;
+  }
+  
+  @keyframes slideUpFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(50px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  /* Glowing border animation */
+  .success-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+      #00ff88, 
+      #00ffe5, 
+      #00b8d4, 
+      #00ff88);
+    background-size: 300% 300%;
+    border-radius: 32px;
+    z-index: -1;
+    opacity: 0;
+    animation: borderGlow 3s ease-in-out infinite, borderFadeIn 1s ease forwards 0.5s;
+    filter: blur(10px);
+  }
+  
+  @keyframes borderGlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  @keyframes borderFadeIn {
+    to {
+      opacity: 0.6;
+    }
+  }
+  
+  /* Success Icon */
+  .success-icon-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 35px;
+    opacity: 0;
+    animation: iconAppear 0.8s ease forwards 0.3s;
+  }
+  
+  @keyframes iconAppear {
+    0% {
+      opacity: 0;
+      transform: scale(0) rotate(-180deg);
+    }
+    60% {
+      transform: scale(1.2) rotate(10deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+  
+  .success-icon-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: iconPulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes iconPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.8;
+    }
+  }
+  
+  .success-icon {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 229, 0.2));
+    border: 3px solid #00ff88;
+    border-radius: 50%;
+    box-shadow: 
+      0 0 30px rgba(0, 255, 136, 0.5),
+      inset 0 0 20px rgba(0, 255, 136, 0.2);
+  }
+  
+  .success-icon svg {
+    width: 70px;
+    height: 70px;
+    stroke: #00ff88;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.8));
+    animation: checkDraw 0.8s ease forwards 0.5s;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  
+  @keyframes checkDraw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  /* Text Content */
+  .success-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #00ff88 0%, #00ffe5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    animation: textFadeIn 0.8s ease forwards 0.6s;
+    line-height: 1.2;
+  }
+  
+  @keyframes textFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .success-message {
+    font-size: 1.2rem;
+    color: #cccccc;
+    text-align: center;
+    margin-bottom: 45px;
+    line-height: 1.7;
+    font-weight: 500;
+    opacity: 0;
+    animation: textFadeIn 0.8s ease forwards 0.8s;
+  }
+  
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    opacity: 0;
+    animation: textFadeIn 0.8s ease forwards 1s;
+  }
+  
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px 40px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: 14px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.3px;
+  }
+  
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .btn:hover::before {
+    width: 400px;
+    height: 400px;
+  }
+  
+  .btn span {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #00ff88 0%, #00ffe5 100%);
+    color: #000000;
+    border: none;
+    box-shadow: 
+      0 6px 30px rgba(0, 255, 136, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  .btn-primary::before {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 10px 40px rgba(0, 255, 136, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  .btn-primary:active {
+    transform: translateY(-2px);
+  }
+  
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 229, 0.4);
+    color: #00ffe5;
+    box-shadow: 0 4px 20px rgba(0, 255, 229, 0.2);
+  }
+  
+  .btn-secondary::before {
+    background: rgba(0, 255, 229, 0.1);
+  }
+  
+  .btn-secondary:hover {
+    background: rgba(0, 255, 229, 0.1);
+    border-color: #00ffe5;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 255, 229, 0.4);
+  }
+  
+  .btn-secondary:active {
+    transform: translateY(-2px);
+  }
+  
+  /* Icon animations */
+  .btn-icon {
+    font-size: 1.3rem;
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+  
+  .btn:hover .btn-icon {
+    transform: scale(1.2) rotate(5deg);
+  }
+  
+  /* Sparkle effect */
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #00ffe5;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkleFloat 3s ease-in-out infinite;
+    opacity: 0;
+  }
+  
+  @keyframes sparkleFloat {
+    0%, 100% {
+      opacity: 0;
+      transform: translateY(0) scale(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-100px) scale(1);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .success-container {
+      padding: 45px 35px;
+      border-radius: 24px;
+    }
+    
+    .success-icon-wrapper {
+      width: 110px;
+      height: 110px;
+      margin-bottom: 30px;
+    }
+    
+    .success-icon svg {
+      width: 55px;
+      height: 55px;
+    }
+    
+    .success-message {
+      font-size: 1.1rem;
+      margin-bottom: 35px;
+    }
+    
+    .btn {
+      padding: 16px 32px;
+      font-size: 1.05rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    main {
+      padding: 30px 15px;
+    }
+    
+    .success-container {
+      padding: 35px 25px;
+    }
+    
+    .success-title {
+      font-size: 1.8rem;
+    }
+    
+    .success-message {
+      font-size: 1rem;
+    }
+    
+    .btn {
+      padding: 14px 28px;
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Animated Background Decorations -->
+  <div class="bg-decoration bg-glow-1"></div>
+  <div class="bg-decoration bg-glow-2"></div>
+  <div class="bg-decoration bg-glow-3"></div>
+  
+  <!-- Floating Particles -->
+  <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+  <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+  <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+  <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+  <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+  <div class="particle" style="left: 70%; animation-delay: 2.5s;"></div>
+  <div class="particle" style="left: 80%; animation-delay: 4.5s;"></div>
+  <div class="particle" style="left: 90%; animation-delay: 1.5s;"></div>
+  
+  <%- include("../partials/nav") %>
+
+  <main>
+    <div class="success-container">
+      <!-- Success Icon -->
+      <div class="success-icon-wrapper">
+        <div class="success-icon-bg"></div>
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Title & Message -->
+      <h1 class="success-title">Camera Added Successfully!</h1>
+      <p class="success-message">
+        Your new security camera has been registered and is now active in the system. 
+        You can start monitoring immediately.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="/host/host-camera-list" class="btn btn-primary">
+          <span class="btn-icon">📹</span>
+          <span>View All Cameras</span>
+        </a>
+        <a href="/host/add-camera" class="btn btn-secondary">
+          <span class="btn-icon">➕</span>
+          <span>Add Another Camera</span>
+        </a>
+      </div>
+      
+      <!-- Sparkle Effects -->
+      <div class="sparkle" style="top: 20%; left: 15%; animation-delay: 0.5s;"></div>
+      <div class="sparkle" style="top: 30%; right: 20%; animation-delay: 1.5s;"></div>
+      <div class="sparkle" style="bottom: 25%; left: 25%; animation-delay: 2s;"></div>
+      <div class="sparkle" style="bottom: 35%; right: 15%; animation-delay: 2.5s;"></div>
+    </div>
+  </main>
+</body>
+</html>

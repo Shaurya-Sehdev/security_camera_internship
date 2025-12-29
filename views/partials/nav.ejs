@@ -1,0 +1,136 @@
+<nav
+  class="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-[#0b0b0b]/90 border-b border-white/10 shadow-[0_0_25px_rgba(255,255,255,0.1)]"
+>
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+    <a
+      href="/"
+      class="text-3xl font-extrabold tracking-wide text-[#00ffe5] hover:text-white transition duration-300 drop-shadow-[0_0_10px_#00ffe5]"
+    >
+      AI<span class="text-white">Secure</span>
+    </a>
+
+    <div class="hidden md:flex items-center space-x-6">
+      <% if (isLoggedIn) { %>
+      <a
+        href="/cameras"
+        class="text-lg font-medium transition duration-300 <%= currentPage === 'camera' ? 'text-[#00ffe5] font-semibold drop-shadow-[0_0_6px_#00ffe5]' : 'text-gray-300 hover:text-[#00ffe5]' %>"
+      >
+        All Cameras
+      </a>
+
+      <a
+        href="/favourites"
+        class="text-lg font-medium transition duration-300 flex items-center gap-1 <%= currentPage === 'favourites' ? 'text-[#00ffe5] font-semibold drop-shadow-[0_0_6px_#00ffe5]' : 'text-gray-300 hover:text-[#00ffe5]' %>"
+      >
+        <span>Favourites</span>
+      </a>
+
+      <div class="pl-6 ml-6 border-l border-white/10 flex items-center gap-4">
+        <a
+          href="/host/host-camera-list"
+          class="text-lg font-medium transition duration-300 <%= currentPage === 'host-cameras' ? 'text-[#00ffe5] font-semibold drop-shadow-[0_0_6px_#00ffe5]' : 'text-gray-300 hover:text-[#00ffe5]' %>"
+        >
+          My Cameras
+        </a>
+
+        <a
+          href="/host/add-camera"
+          class="text-lg font-medium transition duration-300 <%= currentPage === 'addCamera' ? 'text-[#00ffe5] font-semibold drop-shadow-[0_0_6px_#00ffe5]' : 'text-gray-300 hover:text-[#00ffe5]' %>"
+        >
+          Add Camera
+        </a>
+      </div>
+      <% } %>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <% if (isLoggedIn) { %>
+      <form action="/logout" method="POST" class="inline">
+        <button
+          type="submit"
+          class="px-5 py-2 bg-white/90 text-black font-semibold rounded-lg hover:bg-[#00ffe5] hover:text-black hover:shadow-[0_0_18px_#00ffe5] transition duration-300"
+        >
+          Logout
+        </button>
+      </form>
+      <% } else { %>
+      <a
+        href="/login"
+        class="px-5 py-2 bg-white text-black font-semibold rounded-lg border border-[#00ffe5]/40 hover:bg-[#00ffe5] hover:text-black hover:shadow-[0_0_18px_#00ffe5] transition duration-300 <%= currentPage === 'login' ? 'bg-[#00ffe5] text-black shadow-[0_0_12px_#00ffe5]' : '' %>"
+      >
+        Login
+      </a>
+      <% } %>
+    </div>
+
+    <div class="md:hidden">
+      <button
+        id="menu-toggle"
+        class="text-[#00ffe5] hover:text-white transition duration-300 text-3xl"
+      >
+        ☰
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden flex flex-col items-center space-y-4 py-4 bg-[#0b0b0b]/95 border-t border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+  >
+    <a
+      href="/"
+      class="text-gray-300 hover:text-[#00ffe5] transition duration-300"
+      >About Us</a
+    >
+
+    <% if (isLoggedIn) { %>
+    <a
+      href="/cameras"
+      class="text-gray-300 hover:text-[#00ffe5] transition duration-300"
+    >
+      All Cameras
+    </a>
+    <a
+      href="/favourites"
+      class="text-gray-300 hover:text-[#00ffe5] transition duration-300"
+    >
+      Favourites
+    </a>
+    <a
+      href="/host/host-camera-list"
+      class="text-gray-300 hover:text-[#00ffe5] transition duration-300"
+    >
+      My Cameras
+    </a>
+    <a
+      href="/host/add-camera"
+      class="text-gray-300 hover:text-[#00ffe5] transition duration-300"
+    >
+      Add Camera
+    </a>
+    <form action="/logout" method="POST">
+      <button
+        type="submit"
+        class="text-red-400 hover:text-white transition duration-300"
+      >
+        Logout
+      </button>
+    </form>
+    <% } else { %>
+    <a
+      href="/login"
+      class="px-5 py-2 bg-[#00ffe5] text-black font-semibold rounded-lg border border-[#00ffe5]/40 shadow-[0_0_12px_#00ffe5] hover:bg-[#00e0cc] hover:shadow-[0_0_18px_#00ffe5] transition duration-300 <%= currentPage === 'login' ? 'bg-[#00ffe5] text-black' : '' %>"
+    >
+      Login
+    </a>
+    <% } %>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    toggleBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+  </script>
+</nav>

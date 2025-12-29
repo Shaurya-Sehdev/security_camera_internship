@@ -1,0 +1,547 @@
+<%- include("../partials/head") %>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #000000;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+  
+  main {
+    min-height: 100vh;
+    padding: 120px 20px 60px;
+    position: relative;
+  }
+  
+  /* Background decorations */
+  .bg-decoration {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .bg-glow-1 {
+    top: 10%;
+    left: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 255, 229, 0.12) 0%, transparent 70%);
+    filter: blur(80px);
+    animation: pulse 8s ease-in-out infinite;
+  }
+  
+  .bg-glow-2 {
+    bottom: 10%;
+    right: 10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 184, 212, 0.1) 0%, transparent 70%);
+    filter: blur(70px);
+    animation: pulse 8s ease-in-out infinite 2s;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+  }
+  
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .page-header {
+    text-align: center;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .page-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    margin-bottom: 15px;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    text-shadow: 0 0 40px rgba(0, 255, 229, 0.3);
+  }
+  
+  .page-subtitle {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: #cccccc;
+    font-weight: 400;
+  }
+  
+  .add-camera-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 35px;
+    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+    color: #000000;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: 50px;
+    margin-bottom: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 25px rgba(0, 255, 229, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .add-camera-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+  
+  .add-camera-btn:hover::before {
+    left: 100%;
+  }
+  
+  .add-camera-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 35px rgba(0, 255, 229, 0.6);
+  }
+  
+  .cameras-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+  }
+  
+  .camera-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 255, 229, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s ease forwards;
+  }
+  
+  .camera-card:nth-child(1) { animation-delay: 0.1s; }
+  .camera-card:nth-child(2) { animation-delay: 0.2s; }
+  .camera-card:nth-child(3) { animation-delay: 0.3s; }
+  .camera-card:nth-child(4) { animation-delay: 0.4s; }
+  .camera-card:nth-child(5) { animation-delay: 0.5s; }
+  .camera-card:nth-child(6) { animation-delay: 0.6s; }
+  .camera-card:nth-child(7) { animation-delay: 0.7s; }
+  .camera-card:nth-child(8) { animation-delay: 0.8s; }
+  .camera-card:nth-child(9) { animation-delay: 0.9s; }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .camera-card:hover {
+    transform: translateY(-10px);
+    border-color: #00ffe5;
+    box-shadow: 0 20px 60px rgba(0, 255, 229, 0.3);
+  }
+  
+  .video-container {
+    width: 100%;
+    height: 250px;
+    background: #000000;
+    border-bottom: 2px solid rgba(0, 255, 229, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .camera-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.3s ease;
+  }
+  
+  .camera-card:hover .camera-video {
+    filter: brightness(1.1);
+  }
+  
+  .video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  .no-video-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0, 255, 229, 0.05) 0%, rgba(0, 184, 212, 0.05) 100%);
+    color: #666666;
+  }
+  
+  .no-video-icon {
+    font-size: 4rem;
+    margin-bottom: 10px;
+    opacity: 0.3;
+  }
+  
+  .no-video-text {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .card-content {
+    padding: 30px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .camera-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+    transition: color 0.3s ease;
+  }
+  
+  .camera-card:hover .camera-name {
+    color: #00ffe5;
+  }
+  
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: #cccccc;
+    font-size: 1rem;
+  }
+  
+  .info-label {
+    font-weight: 600;
+    color: #ffffff;
+    min-width: 100px;
+    opacity: 0.9;
+  }
+  
+  .info-value {
+    color: #aaaaaa;
+    flex: 1;
+  }
+  
+  .status-online {
+    color: #00ff88;
+    font-weight: 700;
+  }
+  
+  .status-offline {
+    color: #ff4444;
+    font-weight: 700;
+  }
+  
+  .description-section {
+    background: rgba(0, 255, 229, 0.05);
+    border-left: 3px solid #00ffe5;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .description-label {
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 6px;
+  }
+  
+  .description-text {
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    line-height: 1.5;
+  }
+  
+  .card-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+  }
+  
+  .btn-edit {
+    flex: 1;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 255, 229, 0.3);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+  
+  .btn-edit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-edit:hover::before {
+    left: 100%;
+  }
+  
+  .btn-edit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0, 255, 229, 0.5);
+  }
+  
+  .btn-delete {
+    flex: 1;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    border: none;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255, 68, 68, 0.3);
+  }
+  
+  .btn-delete:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(255, 68, 68, 0.5);
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 100px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.3s;
+  }
+  
+  .empty-icon {
+    font-size: 6rem;
+    margin-bottom: 30px;
+    opacity: 0.3;
+  }
+  
+  .empty-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 15px;
+  }
+  
+  .empty-text {
+    font-size: 1.2rem;
+    color: #888888;
+    margin-bottom: 35px;
+    line-height: 1.6;
+  }
+  
+  .empty-link {
+    color: #00ffe5;
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+  
+  .empty-link:hover {
+    border-bottom-color: #00ffe5;
+  }
+  
+  @media (max-width: 768px) {
+    main {
+      padding: 60px 15px 40px;
+    }
+    
+    .cameras-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .page-header {
+      margin-bottom: 40px;
+    }
+    
+    .card-content {
+      padding: 20px;
+    }
+    
+    .video-container {
+      height: 200px;
+    }
+    
+    .card-actions {
+      flex-direction: column;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .camera-name {
+      font-size: 1.5rem;
+    }
+    
+    .info-label {
+      min-width: 90px;
+      font-size: 0.9rem;
+    }
+    
+    .info-value {
+      font-size: 0.9rem;
+    }
+    
+    .add-camera-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Background decorations -->
+  <div class="bg-decoration bg-glow-1"></div>
+  <div class="bg-decoration bg-glow-2"></div>
+  
+  <%- include("../partials/nav") %>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">Your Camera Dashboard</h1>
+        <p class="page-subtitle">Manage and monitor all your surveillance feeds</p>
+      </div>
+      
+      <div style="text-align: center; margin-bottom: 50px;">
+        <a href="/host/add-camera" class="add-camera-btn">
+          <span>➕</span>
+          <span>Add New Camera</span>
+        </a>
+      </div>
+
+      <% if (cameras && cameras.length > 0) { %>
+        <div class="cameras-grid">
+          <% cameras.forEach(camera => { %>
+            <div class="camera-card">
+              <div class="video-container">
+                <% if (camera.videoUrl) { %>
+                  <video
+                    src="<%= camera.videoUrl %>"
+                    autoplay
+                    loop
+                    muted
+                    playsinline
+                    class="camera-video"
+                  ></video>
+                  <div class="video-overlay"></div>
+                <% } else { %>
+                  <div class="no-video-placeholder">
+                    <div class="no-video-icon">📹</div>
+                    <div class="no-video-text">No Video Available</div>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="card-content">
+                <h2 class="camera-name"><%= camera.cameraName %></h2>
+                
+                <div class="info-item">
+                  <span class="info-label">📍 Location</span>
+                  <span class="info-value"><%= camera.location || 'N/A' %></span>
+                </div>
+                
+                <div class="info-item">
+                  <span class="info-label">Status</span>
+                  <span class="info-value <%= camera.status === 'Online' ? 'status-online' : 'status-offline' %>">
+                    <%= camera.status || 'Offline' %>
+                  </span>
+                </div>
+                
+                <% if (camera.description) { %>
+                  <div class="description-section">
+                    <div class="description-label">Description</div>
+                    <p class="description-text"><%= camera.description %></p>
+                  </div>
+                <% } %>
+
+                <div class="card-actions">
+                  <a href="/host/edit-camera/<%= camera._id %>?editing=true" class="btn-edit">
+                    Edit
+                  </a>
+                  
+                  <form action="/host/delete-camera/<%= camera._id %>" method="POST" style="flex: 1;">
+                    <button type="submit" class="btn-delete" style="width: 100%;">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-icon">📹</div>
+          <h2 class="empty-title">No Cameras Added Yet</h2>
+          <p class="empty-text">
+            Start building your surveillance network by adding your first camera. 
+            <a href="/host/add-camera" class="empty-link">Add one now</a>.
+          </p>
+        </div>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>

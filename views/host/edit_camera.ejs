@@ -1,0 +1,343 @@
+<%- include('../partials/head') %>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #000000;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+  
+  main {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 120px 20px 60px;
+    position: relative;
+  }
+  
+  /* Background decorations */
+  .bg-decoration {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .bg-glow-1 {
+    top: 10%;
+    left: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 255, 229, 0.12) 0%, transparent 70%);
+    filter: blur(80px);
+    animation: pulse 8s ease-in-out infinite;
+  }
+  
+  .bg-glow-2 {
+    bottom: 10%;
+    right: 10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 184, 212, 0.1) 0%, transparent 70%);
+    filter: blur(70px);
+    animation: pulse 8s ease-in-out infinite 2s;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+  }
+  
+  .form-container {
+    width: 100%;
+    max-width: 650px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 255, 229, 0.2);
+    border-radius: 24px;
+    padding: 50px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 40px rgba(0, 255, 229, 0.15);
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.2s;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .form-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  .form-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 229, 0.25);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+  
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: #666666;
+  }
+  
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: #00ffe5;
+    background: rgba(0, 255, 229, 0.08);
+    box-shadow: 0 0 20px rgba(0, 255, 229, 0.2);
+  }
+  
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .form-hint {
+    font-size: 0.85rem;
+    color: #888888;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+  
+  .form-hint-highlight {
+    color: #00ffe5;
+    font-weight: 600;
+  }
+  
+  .btn-submit {
+    width: 100%;
+    padding: 18px 32px;
+    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+    color: #000000;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 25px rgba(0, 255, 229, 0.4);
+    position: relative;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-submit:hover::before {
+    left: 100%;
+  }
+  
+  .btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 35px rgba(0, 255, 229, 0.6);
+  }
+  
+  .btn-submit:active {
+    transform: translateY(-1px);
+  }
+  
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #00ffe5;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+  }
+  
+  .back-link:hover {
+    background: rgba(0, 255, 229, 0.1);
+    transform: translateX(-5px);
+  }
+  
+  /* Icon decorations */
+  .input-icon {
+    position: relative;
+  }
+  
+  .input-icon::before {
+    content: attr(data-icon);
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    opacity: 0.5;
+  }
+  
+  .input-with-icon {
+    padding-left: 50px;
+  }
+  
+  @media (max-width: 768px) {
+    main {
+      padding: 60px 15px;
+    }
+    
+    .form-container {
+      padding: 35px 25px;
+    }
+    
+    .form-title {
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .form-container {
+      padding: 30px 20px;
+    }
+    
+    .form-title {
+      font-size: 1.8rem;
+    }
+    
+    .btn-submit {
+      font-size: 1rem;
+      padding: 16px 28px;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Background decorations -->
+  <div class="bg-decoration bg-glow-1"></div>
+  <div class="bg-decoration bg-glow-2"></div>
+  
+  <%- include('../partials/nav') %>
+
+  <main>
+    <div class="form-container">
+      <a href="/host/dashboard" class="back-link">
+        <span>←</span>
+        <span>Back to Dashboard</span>
+      </a>
+      
+      <h1 class="form-title">
+        <%= editing ? "Edit" : "Register" %> Camera Feed
+      </h1>
+
+      <form action="/host/<%= editing ? 'edit-camera' : 'add-camera' %>" method="POST">
+        <input type="hidden" name="id" value="<%= editing ? camera._id : '' %>" />
+
+        <div class="form-group">
+          <label class="form-label">Camera Name</label>
+          <input
+            type="text"
+            name="cameraName"
+            value="<%= editing ? camera.cameraName : '' %>"
+            placeholder="e.g., Main Entrance Camera"
+            class="form-input"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">📍 Location</label>
+          <input
+            type="text"
+            name="location"
+            value="<%= editing ? camera.location : '' %>"
+            placeholder="e.g., Building A - Lobby"
+            class="form-input"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Video URL</label>
+          <input
+            type="text"
+            name="videoUrl"
+            value="<%= editing ? camera.videoUrl : '' %>"
+            placeholder="e.g., https://example.com/video.mp4 or video1.mp4"
+            class="form-input"
+          />
+          <p class="form-hint">
+            Status will be set to <span class="form-hint-highlight">"Online"</span> if video is provided, otherwise <span class="form-hint-highlight">"Offline"</span>.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea
+            name="description"
+            placeholder="Enter camera details, coverage area, or additional notes..."
+            class="form-textarea"
+          ><%= editing ? camera.description : '' %></textarea>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn-submit">
+            <%= editing ? '✓ Update Camera' : '+ Add Camera' %>
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
