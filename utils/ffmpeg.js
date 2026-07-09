@@ -3,9 +3,14 @@ const fs = require("fs/promises");
 const path = require("path");
 const logger = require("./logger");
 
+const envUtil = require("./envUtil");
+
+const FFMPEG_PATH = envUtil.getFfmpegPath();
+const FFPROBE_PATH = envUtil.getFfprobePath();
+
 async function getVideoDuration(inputPath) {
   return new Promise((resolve, reject) => {
-    const command = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${inputPath}"`;
+    const command = `"${FFPROBE_PATH}" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${inputPath}"`;
     exec(command, { timeout: 30000 }, (error, stdout, stderr) => {
       if (error) {
         logger.error(`FFprobe error for ${inputPath}`, error, { stderr });
@@ -45,9 +50,9 @@ async function splitVideo(
   );
   const outputPattern = path.join(outputDir, `${prefix}_%0${padding}d.mp4`);
 
-  let command = `ffmpeg -y -i "${inputPath}" -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -force_key_frames "expr:gte(t,n_forced*${segmentTime})" -c:a aac -b:a 128k -ar 44100 -movflags +faststart -f segment -segment_time ${segmentTime} -reset_timestamps 1 "${outputPattern}"`;
+  let command = `"${FFMPEG_PATH}" -y -i "${inputPath}" -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -force_key_frames "expr:gte(t,n_forced*${segmentTime})" -c:a aac -b:a 128k -ar 44100 -movflags +faststart -f segment -segment_time ${segmentTime} -reset_timestamps 1 "${outputPattern}"`;
 
-  logger.info(`[FFMPEG] Processing: ${inputPath}`);
+  logger.info(`[FFMPEG] Running Command: ${command}`);
 
   await new Promise((resolve, reject) => {
     exec(command, { 
@@ -63,6 +68,7 @@ async function splitVideo(
   });
 
   const files = await fs.readdir(outputDir);
+  logger.info(`[FFMPEG] Output Directory (${outputDir}) contains ${files.length} files.`);
   let chunkFiles = files
     .filter((f) => f.startsWith(prefix) && f.endsWith(".mp4"))
     .sort();

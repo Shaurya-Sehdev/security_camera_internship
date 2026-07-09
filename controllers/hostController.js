@@ -17,7 +17,11 @@ const normalizeVideoUrl = (videoUrl) => {
     return trimmedUrl;
   }
 
-  if (trimmedUrl.startsWith("/")) {
+  if (trimmedUrl.startsWith("/") && !trimmedUrl.startsWith("/videos/")) {
+    // If it's a root-relative path (e.g. /home/...) check if it's actually an absolute file system path
+    if (trimmedUrl.includes("/home/") || trimmedUrl.includes("/Users/") || trimmedUrl.includes("/mnt/")) {
+      return trimmedUrl; // Keep absolute paths as-is
+    }
     return `/videos${trimmedUrl}`;
   }
 
@@ -51,10 +55,10 @@ exports.getEditCamera = (req, res, next) => {
     return res.redirect("/host/host-camera-list");
   }
 
-  Camera.findById(cameraId)
+  Camera.findOne({ _id: cameraId, userEmail: req.session.userEmail || "anonymous@security.com" })
     .then((camera) => {
       if (!camera) {
-        console.log("[ERROR] Camera not found for editing");
+        console.log("[ERROR] Camera not found or Unauthorized access attempt");
         return res.redirect("/host/host-camera-list");
       }
       res.render("host/edit_camera", {
@@ -72,7 +76,7 @@ exports.getEditCamera = (req, res, next) => {
 };
 
 exports.getHostCameras = (req, res, next) => {
-  Camera.find()
+  Camera.find({ userEmail: req.session.userEmail || "anonymous@security.com" })
     .then((cameras) => {
       res.render("host/host_camera_list", {
         pageTitle: "Host Camera List",
@@ -121,6 +125,7 @@ exports.postAddCamera = async (req, res, next) => {
       location: location.trim(),
       videoUrl: normalizedVideoUrl,
       description: description ? description.trim() : "",
+      userEmail: req.session.userEmail || "anonymous@security.com",
       status: status,
       createdAt: new Date(),
     });
@@ -167,7 +172,7 @@ exports.postEditCamera = async (req, res, next) => {
     }
 
     if (!cameraName || !cameraName.trim() || !location || !location.trim()) {
-      const camera = await Camera.findById(id);
+      const camera = await Camera.findOne({ _id: id, userEmail: req.session.userEmail || "anonymous@security.com" });
       if (!camera) {
         return res.redirect("/host/host-camera-list");
       }
@@ -181,9 +186,9 @@ exports.postEditCamera = async (req, res, next) => {
       });
     }
 
-    const camera = await Camera.findById(id);
+    const camera = await Camera.findOne({ _id: id, userEmail: req.session.userEmail || "anonymous@security.com" });
     if (!camera) {
-      logger.warn(`Camera not found for edit: ${id}`);
+      logger.warn(`Camera not found for edit or unauthorized access: ${id}`);
       return res.redirect("/host/host-camera-list");
     }
 
@@ -217,7 +222,7 @@ exports.postDeleteCamera = async (req, res, next) => {
     const Favourite = require("../models/favourite");
     const Analysis = require("../models/analysis");
 
-    const camera = await Camera.findByIdAndDelete(cameraId);
+    const camera = await Camera.findOneAndDelete({ _id: cameraId, userEmail: req.session.userEmail || "anonymous@security.com" });
     if (camera) {
       logger.info(`Camera deleted: ${cameraId}`);
       

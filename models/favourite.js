@@ -6,19 +6,15 @@ const favouriteSchema = new mongoose.Schema({
     ref: "Camera",
     required: true,
   },
-  // TODO: Add userId when user authentication is implemented
-  // userId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "User",
-  //   required: true,
-  // },
+  userEmail: {
+    type: String,
+    required: [true, "User email is required for favorites"],
+  }
 }, {
-  timestamps: true, // Adds createdAt and updatedAt automatically
+  timestamps: true,
 });
 
 // Compound unique index: prevents duplicate favourites per user
-// For now, unique on cameraId only (global favourites)
-// When users are added, change to: { cameraId: 1, userId: 1 }, { unique: true }
-favouriteSchema.index({ cameraId: 1 }, { unique: true });
+favouriteSchema.index({ cameraId: 1, userEmail: 1 }, { unique: true });
 
 module.exports = mongoose.model("Favourite", favouriteSchema);

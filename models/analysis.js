@@ -32,6 +32,11 @@ const analysisSchema = new mongoose.Schema({
     type: Boolean, 
     default: false,
   },
+  objectsTracked: [{
+    label: String,
+    confidence: Number,
+    position: String,
+  }],
   analysis: {
     title: {
       type: String,
@@ -54,9 +59,17 @@ const analysisSchema = new mongoose.Schema({
   },
   status: { 
     type: String, 
-    enum: ["pending", "processing", "completed", "error"], 
+    enum: ["pending", "processing", "initializing_ai", "completed", "error"], 
     default: "pending",
     index: true,
+  },
+  statusMessage: {
+    type: String,
+    default: "",
+  },
+  groqVerdict: {
+    isSuspicious: { type: Boolean, default: false },
+    reason: { type: String, default: "" },
   },
   error: {
     type: String,

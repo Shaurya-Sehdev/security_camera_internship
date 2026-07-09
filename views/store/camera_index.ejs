@@ -1,988 +1,933 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SoCTeamup Semiconductors Pvt. Ltd.</title>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap");
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Security Camera System | Security Camera Monitoring Interface</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap");
 
-      html {
-        scroll-behavior: smooth;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      body {
-        font-family: "Inter", sans-serif;
-        overflow-x: hidden;
-        background: #000000;
-      }
+    html {
+      scroll-behavior: smooth;
+    }
 
-      /* Navigation Bar */
-      .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 90px;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(0, 255, 229, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 40px;
-        z-index: 1000;
-      }
+    body {
+      font-family: "Inter", sans-serif;
+      overflow-x: hidden;
+      background: #000000;
+    }
 
-      .logo {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        padding: 0;
-      }
+    /* Navigation Bar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 90px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 255, 229, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 1000;
+    }
 
-      .logo img {
-        height: 70%;
-        width: auto;
-        max-width: 500px;
-        object-fit: contain;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
-        transform: scaleX(1.15);
-      }
+    .logo {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0;
+    }
 
-      .logo img:hover {
-        transform: translateY(-2px) scaleX(1.15);
-        filter: brightness(1.08);
-      }
+    .logo img {
+      height: 70%;
+      width: auto;
+      max-width: 500px;
+      object-fit: contain;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      transform: scaleX(1.15);
+    }
 
-      .nav-button {
-        display: inline-block;
-        padding: 12px 32px;
-        background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-        color: #000000;
-        font-size: 1.5rem;
-        font-weight: 800;
-        text-decoration: none;
-        border-radius: 25px;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 20px rgba(0, 255, 229, 0.3);
-        position: relative;
-        overflow: hidden;
-      }
+    .logo img:hover {
+      transform: translateY(-2px) scaleX(1.15);
+      filter: brightness(1.08);
+    }
 
-      .nav-button::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
+    .nav-button {
+      display: inline-block;
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      color: #000000;
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-decoration: none;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0, 255, 229, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
           transparent,
           rgba(255, 255, 255, 0.3),
-          transparent
-        );
-        transition: left 0.5s;
-      }
+          transparent);
+      transition: left 0.5s;
+    }
 
-      .nav-button:hover::before {
-        left: 100%;
-      }
+    .nav-button:hover::before {
+      left: 100%;
+    }
 
-      .nav-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 255, 229, 0.5);
-      }
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 255, 229, 0.5);
+    }
 
-      .section {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        padding: 100px 20px 60px;
-        overflow: hidden;
-      }
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 100px 20px 60px;
+      overflow: hidden;
+    }
 
-      .section-dark {
-        background: #000000;
-      }
+    .section-dark {
+      background: #000000;
+    }
 
-      .section-gray {
-        background: #262625;
-      }
+    .section-gray {
+      background: #262625;
+    }
 
-      .parallax-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(
-          circle at 50% 50%,
+    .parallax-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%,
           rgba(0, 255, 229, 0.1) 0%,
-          transparent 50%
-        );
-        transform: translateZ(-1px) scale(1.5);
-        transition: transform 0.5s ease-out;
+          transparent 50%);
+      transform: translateZ(-1px) scale(1.5);
+      transition: transform 0.5s ease-out;
+    }
+
+    .content {
+      max-width: 1200px;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section:nth-child(2) .content {
+      animation-delay: 0.2s;
+    }
+
+    .section:nth-child(3) .content {
+      animation-delay: 0.2s;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 20px;
+      line-height: 1.1;
+      letter-spacing: -2px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 30px;
+      letter-spacing: -1px;
+    }
+
+    h3 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 700;
+      color: #00ffe5;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: #cccccc;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .highlight {
+      color: #00ffe5;
+      font-weight: 700;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .stat-item {
+      opacity: 0;
+      transform: scale(0.8);
+      animation: scaleIn 0.6s ease forwards;
+    }
+
+    .stat-item:nth-child(1) {
+      animation-delay: 0.3s;
+    }
+
+    .stat-item:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+
+    .stat-item:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+
+    .stat-item:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes scaleIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .stat-number {
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      white-space: nowrap;
+      line-height: 1.3;
+      display: inline-block;
+    }
+
+    .stat-label {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      color: #999999;
+      font-weight: 600;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 229, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 0.8s ease forwards;
+    }
+
+    .card:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .card:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      border-color: #00ffe5;
+      box-shadow: 0 20px 60px rgba(0, 255, 229, 0.3);
+    }
+
+    .icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      font-size: 35px;
+    }
+
+    .icon svg {
+      width: 38px;
+      height: 38px;
+      fill: #000000;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 20px;
+      margin-top: 50px;
+      text-align: left;
+    }
+
+    .feature-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 4px solid #00ffe5;
+      padding: 25px 30px;
+      border-radius: 10px;
+      opacity: 0;
+      transform: translateX(-30px);
+      animation: slideRight 0.8s ease forwards;
+    }
+
+    .feature-item:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .feature-item:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .feature-item:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes slideRight {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .feature-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #00ffe5;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .feature-icon {
+      font-size: 1.8rem;
+      color: #00ffe5;
+      min-width: 28px;
+    }
+
+    .feature-icon svg {
+      width: 28px;
+      height: 28px;
+      fill: #00ffe5;
+    }
+
+    .feature-desc {
+      color: #aaaaaa;
+      font-size: 1.1rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .contact-card {
+      background: rgba(0, 255, 229, 0.05);
+      border: 2px solid rgba(0, 255, 229, 0.3);
+      border-radius: 15px;
+      padding: 35px;
+      transition: all 0.3s ease;
+    }
+
+    .contact-card:hover {
+      background: rgba(0, 255, 229, 0.1);
+      border-color: #00ffe5;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 255, 229, 0.2);
+    }
+
+    .contact-icon {
+      font-size: 36px;
+      margin-bottom: 15px;
+      color: #00ffe5;
+    }
+
+    .contact-icon svg {
+      width: 36px;
+      height: 36px;
+      fill: #00ffe5;
+    }
+
+    .contact-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .contact-detail {
+      color: #aaaaaa;
+      font-size: 1.1rem;
+      word-break: break-word;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
       }
 
-      .content {
-        max-width: 1200px;
-        text-align: center;
-        position: relative;
-        z-index: 10;
-        opacity: 0;
-        transform: translateY(50px);
-        animation: fadeInUp 1s ease forwards;
+      50% {
+        transform: translateX(-50%) translateY(15px);
       }
+    }
 
-      @keyframes fadeInUp {
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+    .arrow-down {
+      width: 30px;
+      height: 30px;
+      border-left: 3px solid #00ffe5;
+      border-bottom: 3px solid #00ffe5;
+      transform: rotate(-45deg);
+    }
 
-      .section:nth-child(2) .content {
-        animation-delay: 0.2s;
-      }
+    /* Footer Section */
+    .footer {
+      background: #000000;
+      border-top: 1px solid rgba(0, 255, 229, 0.2);
+      padding: 50px 20px;
+    }
 
-      .section:nth-child(3) .content {
-        animation-delay: 0.2s;
-      }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
 
-      h1 {
-        font-size: clamp(3rem, 8vw, 6rem);
-        font-weight: 900;
-        color: #ffffff;
-        margin-bottom: 20px;
-        line-height: 1.1;
-        letter-spacing: -2px;
-      }
+    .social-links {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
 
-      .gradient-text {
-        background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
+    .social-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 255, 229, 0.1);
+      border: 2px solid rgba(0, 255, 229, 0.3);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
 
-      h2 {
-        font-size: clamp(2.5rem, 6vw, 5rem);
-        font-weight: 800;
-        color: #ffffff;
-        margin-bottom: 30px;
-        letter-spacing: -1px;
-      }
+    .social-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #00ffe5;
+      transition: all 0.3s ease;
+    }
 
-      h3 {
-        font-size: clamp(1.5rem, 3vw, 2.5rem);
-        font-weight: 700;
-        color: #00ffe5;
-        margin-bottom: 20px;
-      }
+    .social-icon:hover {
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      border-color: #00ffe5;
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 25px rgba(0, 255, 229, 0.4);
+    }
 
-      p {
-        font-size: clamp(1rem, 2vw, 1.3rem);
-        color: #cccccc;
-        line-height: 1.8;
-        margin-bottom: 20px;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-      }
+    .social-icon:hover svg {
+      fill: #000000;
+    }
 
-      .highlight {
-        color: #00ffe5;
-        font-weight: 700;
-      }
+    .copyright {
+      font-size: 1rem;
+      color: #999999;
+      text-align: center;
+      font-weight: 500;
+    }
 
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 40px;
-        margin-top: 60px;
-      }
-
-      .stat-item {
-        opacity: 0;
-        transform: scale(0.8);
-        animation: scaleIn 0.6s ease forwards;
-      }
-
-      .stat-item:nth-child(1) {
-        animation-delay: 0.3s;
-      }
-      .stat-item:nth-child(2) {
-        animation-delay: 0.4s;
-      }
-      .stat-item:nth-child(3) {
-        animation-delay: 0.5s;
-      }
-      .stat-item:nth-child(4) {
-        animation-delay: 0.6s;
-      }
-
-      @keyframes scaleIn {
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
-
-      .stat-number {
-        font-size: clamp(2.8rem, 5vw, 4.5rem);
-        font-weight: 900;
-        background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 10px;
-        white-space: nowrap;
-        line-height: 1.3;
-        display: inline-block;
-      }
-
-      .stat-label {
-        font-size: clamp(1rem, 1.5vw, 1.2rem);
-        color: #999999;
-        font-weight: 600;
-      }
-
-      .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        margin-top: 60px;
-      }
-
-      .card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(0, 255, 229, 0.2);
-        border-radius: 20px;
-        padding: 40px;
-        backdrop-filter: blur(10px);
-        transition: all 0.4s ease;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: slideUp 0.8s ease forwards;
-      }
-
-      .card:nth-child(1) {
-        animation-delay: 0.2s;
-      }
-      .card:nth-child(2) {
-        animation-delay: 0.3s;
-      }
-      .card:nth-child(3) {
-        animation-delay: 0.4s;
-      }
-
-      @keyframes slideUp {
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .card:hover {
-        transform: translateY(-10px);
-        border-color: #00ffe5;
-        box-shadow: 0 20px 60px rgba(0, 255, 229, 0.3);
-      }
-
-      .icon {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 25px;
-        font-size: 35px;
-      }
-
-      .icon svg {
-        width: 38px;
-        height: 38px;
-        fill: #000000;
-      }
-
-      .feature-list {
-        display: grid;
-        gap: 20px;
-        margin-top: 50px;
-        text-align: left;
-      }
-
-      .feature-item {
-        background: rgba(255, 255, 255, 0.03);
-        border-left: 4px solid #00ffe5;
-        padding: 25px 30px;
-        border-radius: 10px;
-        opacity: 0;
-        transform: translateX(-30px);
-        animation: slideRight 0.8s ease forwards;
-      }
-
-      .feature-item:nth-child(1) {
-        animation-delay: 0.2s;
-      }
-      .feature-item:nth-child(2) {
-        animation-delay: 0.3s;
-      }
-      .feature-item:nth-child(3) {
-        animation-delay: 0.4s;
-      }
-
-      @keyframes slideRight {
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-
-      .feature-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #00ffe5;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .feature-icon {
-        font-size: 1.8rem;
-        color: #00ffe5;
-        min-width: 28px;
-      }
-
-      .feature-icon svg {
-        width: 28px;
-        height: 28px;
-        fill: #00ffe5;
-      }
-
-      .feature-desc {
-        color: #aaaaaa;
-        font-size: 1.1rem;
-      }
-
-      .contact-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
-        margin-top: 60px;
-      }
-
-      .contact-card {
-        background: rgba(0, 255, 229, 0.05);
-        border: 2px solid rgba(0, 255, 229, 0.3);
-        border-radius: 15px;
-        padding: 35px;
-        transition: all 0.3s ease;
-      }
-
-      .contact-card:hover {
-        background: rgba(0, 255, 229, 0.1);
-        border-color: #00ffe5;
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 255, 229, 0.2);
-      }
-
-      .contact-icon {
-        font-size: 36px;
-        margin-bottom: 15px;
-        color: #00ffe5;
-      }
-
-      .contact-icon svg {
-        width: 36px;
-        height: 36px;
-        fill: #00ffe5;
-      }
-
-      .contact-title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 10px;
-      }
-
-      .contact-detail {
-        color: #aaaaaa;
-        font-size: 1.1rem;
-        word-break: break-word;
-      }
-
-      .scroll-indicator {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: bounce 2s infinite;
-      }
-
-      @keyframes bounce {
-        0%,
-        100% {
-          transform: translateX(-50%) translateY(0);
-        }
-        50% {
-          transform: translateX(-50%) translateY(15px);
-        }
-      }
-
-      .arrow-down {
-        width: 30px;
-        height: 30px;
-        border-left: 3px solid #00ffe5;
-        border-bottom: 3px solid #00ffe5;
-        transform: rotate(-45deg);
-      }
-
-      /* Footer Section */
+    @media (max-width: 768px) {
       .footer {
-        background: #000000;
-        border-top: 1px solid rgba(0, 255, 229, 0.2);
-        padding: 50px 20px;
-      }
-
-      .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 30px;
+        padding: 40px 20px;
       }
 
       .social-links {
-        display: flex;
-        gap: 25px;
-        align-items: center;
+        gap: 20px;
       }
 
       .social-icon {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 255, 229, 0.1);
-        border: 2px solid rgba(0, 255, 229, 0.3);
-        border-radius: 50%;
-        transition: all 0.3s ease;
+        width: 45px;
+        height: 45px;
       }
 
       .social-icon svg {
-        width: 24px;
-        height: 24px;
-        fill: #00ffe5;
-        transition: all 0.3s ease;
-      }
-
-      .social-icon:hover {
-        background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-        border-color: #00ffe5;
-        transform: translateY(-5px) scale(1.1);
-        box-shadow: 0 10px 25px rgba(0, 255, 229, 0.4);
-      }
-
-      .social-icon:hover svg {
-        fill: #000000;
+        width: 22px;
+        height: 22px;
       }
 
       .copyright {
-        font-size: 1rem;
-        color: #999999;
-        text-align: center;
-        font-weight: 500;
+        font-size: 0.9rem;
       }
 
-      @media (max-width: 768px) {
-        .footer {
-          padding: 40px 20px;
-        }
-
-        .social-links {
-          gap: 20px;
-        }
-
-        .social-icon {
-          width: 45px;
-          height: 45px;
-        }
-
-        .social-icon svg {
-          width: 22px;
-          height: 22px;
-        }
-
-        .copyright {
-          font-size: 0.9rem;
-        }
-
-        .section {
-          padding: 100px 15px 40px;
-        }
-
-        .navbar {
-          padding: 0 20px;
-          height: 70px;
-        }
-
-        .logo img {
-          height: 100%;
-          max-width: 375px;
-          transform: scaleX(1.12);
-        }
-
-        .nav-button {
-          padding: 10px 24px;
-          font-size: 0.9rem;
-        }
-
-        .cards-grid,
-        .contact-grid {
-          grid-template-columns: 1fr;
-        }
+      .section {
+        padding: 100px 15px 40px;
       }
-    </style>
-  </head>
-  <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-      <div class="logo">
-        <img
-          src="/images/company_logo.png"
-          alt="SoCTeamup Semiconductors Logo"
-        />
-      </div>
-      <a href="/login" class="nav-button">LOGIN</a>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="section section-dark">
-      <div class="parallax-bg"></div>
-      <div class="content">
-        <h1>
-          SoCTeamup<br />
-          <span class="gradient-text">Semiconductors</span>
-        </h1>
-        <p style="font-size: 1.5rem; color: #ffffff; font-weight: 600">
-          Pioneering the Future of Intelligent Surveillance & Semiconductor
-          Innovation
-        </p>
-        <p>
-          A DPIIT recognized startup redefining SoC design and IC development.
-          We democratize semiconductor design through open-source EDA flows
-          while delivering cutting-edge AI-powered security solutions for the
-          modern world.
-        </p>
-      </div>
-      <div class="scroll-indicator">
-        <div class="arrow-down"></div>
-      </div>
-    </section>
+      .navbar {
+        padding: 0 20px;
+        height: 70px;
+      }
 
-    <!-- About Section -->
-    <section class="section section-gray">
-      <div class="parallax-bg"></div>
-      <div class="content">
-        <h2><span class="gradient-text">About Us</span></h2>
-        <p style="font-size: 1.4rem; margin-bottom: 30px">
-          SoCTeamup Semiconductors envisions creating an IC design services
-          platform at par with software development, maximizing visibility of
-          skilled resources in the semiconductor realm while pioneering
-          innovative solutions in the Design for Test (DFT) space.
-        </p>
-        <p>
-          We specialize in developing low-cost plug-and-play DFT/DFX solutions
-          for next-generation SoCs and mission-critical systems. Our
-          comprehensive approach covers everything from architecture planning to
-          implementation, leveraging state-of-the-art technologies to enhance
-          testability, reliability, and overall performance with the shortest
-          time-to-market.
-        </p>
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-number">DPIIT</div>
-            <div class="stat-label">Recognized Startup</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number" style="white-space: nowrap">RISC‑V</div>
-            <div class="stat-label">Architecture Leader</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">DFT</div>
-            <div class="stat-label">Innovation Experts</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">AI</div>
-            <div class="stat-label">Edge Computing</div>
-          </div>
+      .logo img {
+        height: 100%;
+        max-width: 375px;
+        transform: scaleX(1.12);
+      }
+
+      .nav-button {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+      }
+
+      .cards-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo" style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:1.8rem;font-weight:900;color:#00ffe5;letter-spacing:-1px;">Cam<span
+          style="color:#ffffff;">Watch</span></span>
+    </div>
+    <a href="/login" class="nav-button">LOGIN</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="section section-dark">
+    <div class="parallax-bg"></div>
+    <div class="content">
+      <h1>
+        AI Security<br />
+        <span class="gradient-text">Camera System</span>
+      </h1>
+      <p style="font-size: 1.5rem; color: #ffffff; font-weight: 600">
+        Security Camera Monitoring Interface &mdash; Intelligent Surveillance using Deep Learning &amp; Computer Vision
+      </p>
+      <p>
+        A real-time AI-powered security camera monitoring platform.
+        The system integrates YOLO-based object detection, live video analysis, and a modern web dashboard
+        to deliver smart, automated surveillance for campuses and public spaces.
+      </p>
+    </div>
+    <div class="scroll-indicator">
+      <div class="arrow-down"></div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section section-gray">
+    <div class="parallax-bg"></div>
+    <div class="content">
+      <h2><span class="gradient-text">About This Project</span></h2>
+      <p style="font-size: 1.4rem; margin-bottom: 30px">
+        This platform was developed as a production-ready intelligent surveillance system,
+        focusing on building an end-to-end security camera monitoring interface
+        using modern web technologies and AI-powered video analytics.
+      </p>
+      <p>
+        The system provides a full-stack solution — from live camera feed ingestion
+        and AI-based detection to a user-friendly web dashboard. Users can add
+        cameras, view live feeds, manage favourites, and trigger AI analysis on
+        recorded footage in real time.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">YOLO</div>
+          <div class="stat-label">Object Detection</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">Node</div>
+          <div class="stat-label">JS Backend</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">REST</div>
+          <div class="stat-label">API Architecture</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">AI</div>
+          <div class="stat-label">Video Analytics</div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Products Section -->
-    <section class="section section-dark">
-      <div class="parallax-bg"></div>
-      <div class="content">
-        <h2><span class="gradient-text">Our Solutions</span></h2>
-        <p>
-          From cutting-edge semiconductor IP development to AI-powered
-          surveillance systems, we deliver comprehensive solutions that bridge
-          hardware innovation with intelligent software integration.
-        </p>
-        <div class="cards-grid">
-          <div class="card">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"
-                />
-                <circle cx="9.5" cy="12" r="2.5" opacity="0.3" />
-              </svg>
-            </div>
-            <h3>AI Security & Surveillance</h3>
-            <p>
-              Advanced AI-powered CCTV and surveillance systems with facial
-              recognition, video analytics, and intelligent monitoring. Our
-              proprietary software integrates seamlessly with existing
-              infrastructure, eliminating costly hardware replacements.
-            </p>
-            <p style="margin-top: 20px; color: #00ffe5">
-              <span class="highlight">✓</span> Facial Recognition<br />
-              <span class="highlight">✓</span> Video Analytics AI<br />
-              <span class="highlight">✓</span> Edge Computing
-            </p>
-          </div>
-          <div class="card">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                />
-                <circle cx="8" cy="9" r="1.5" />
-                <circle cx="16" cy="9" r="1.5" />
-                <circle cx="12" cy="12" r="1.5" />
-                <circle cx="8" cy="15" r="1.5" />
-                <circle cx="16" cy="15" r="1.5" />
-                <path d="M9 9h2v2H9zm4 0h2v2h-2zm-4 4h2v2H9zm4 0h2v2h-2z" />
-              </svg>
-            </div>
-            <h3>DFT/DFX IP Solutions</h3>
-            <p>
-              Cutting-edge Intellectual Properties specializing in Design for
-              Test methodologies. We deliver low-cost plug-and-play solutions
-              for next-generation SoCs with comprehensive architecture planning
-              and implementation services.
-            </p>
-            <p style="margin-top: 20px; color: #00ffe5">
-              <span class="highlight">✓</span> Plug & Play DFT<br />
-              <span class="highlight">✓</span> Mission Critical<br />
-              <span class="highlight">✓</span> Rapid Deployment
-            </p>
-          </div>
-          <div class="card">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"
-                />
-                <path d="M9 9h2v2H9zm4 0h2v2h-2zm-4 4h2v2H9zm4 0h2v2h-2z" />
-              </svg>
-            </div>
-            <h3>RISC‑V Architectures</h3>
-            <p>
-              Leading provider of RISC‑V architectures and supporting IPs,
-              making revolutionary open-source processor technology accessible
-              to partners and clients for diverse product portfolios and
-              applications.
-            </p>
-            <p style="margin-top: 20px; color: #00ffe5">
-              <span class="highlight">✓</span> Open Architecture<br />
-              <span class="highlight">✓</span> Custom Integration<br />
-              <span class="highlight">✓</span> Complete IP Suite
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Achievements Section -->
-    <section class="section section-gray">
-      <div class="parallax-bg"></div>
-      <div class="content">
-        <h2><span class="gradient-text">Our Expertise</span></h2>
-        <p>
-          Leveraging state-of-the-art technologies and methodologies, we create
-          innovative designs that set new standards in semiconductor development
-          and intelligent security systems. Our multidisciplinary approach
-          ensures comprehensive solutions from concept to deployment.
-        </p>
-        <div class="feature-list">
-          <div class="feature-item">
-            <div class="feature-title">
-              <span class="feature-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M9 3L5 6.99h3V14h2V6.99h3L9 3zm7 14.01V10h-2v7.01h-3L15 21l4-3.99h-3z"
-                  />
-                  <rect x="3" y="10" width="4" height="1" rx="0.5" />
-                  <rect x="17" y="10" width="4" height="1" rx="0.5" />
-                  <rect x="3" y="13" width="4" height="1" rx="0.5" />
-                  <rect x="17" y="13" width="4" height="1" rx="0.5" />
-                  <circle cx="12" cy="7" r="1" />
-                  <circle cx="12" cy="17" r="1" />
-                </svg>
-              </span>
-              Semiconductor Innovation
-            </div>
-            <div class="feature-desc">
-              Pioneering low-cost DFT/DFX solutions with end-to-end architecture
-              planning and implementation. Our expertise in IC design services
-              creates platforms that rival traditional software development in
-              efficiency and scalability.
-            </div>
-          </div>
-          <div class="feature-item">
-            <div class="feature-title">
-              <span class="feature-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                  />
-                </svg>
-              </span>
-              Open-Source EDA Leadership
-            </div>
-            <div class="feature-desc">
-              Democratizing IC design through development of open-source and
-              hybrid EDA design flows. We maximize visibility of skilled
-              resources in the semiconductor realm, making advanced design
-              capabilities accessible to all.
-            </div>
-          </div>
-          <div class="feature-item">
-            <div class="feature-title">
-              <span class="feature-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 4.08-3.05 7.44-7 7.93v2.02c5.05-.5 9-4.76 9-9.95s-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm-1-11h2v6h-2zm0 8h2v2h-2z"
-                  />
-                </svg>
-              </span>
-              AI-Powered Edge Computing
-            </div>
-            <div class="feature-desc">
-              Delivering customized security and surveillance systems based on
-              edge computing devices. Our solutions provide intelligent insights
-              from video feeds, automated monitoring, and seamless integration
-              with existing infrastructure.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Services Section -->
-    <section class="section section-dark">
-      <div class="parallax-bg"></div>
-      <div class="content">
-        <h2><span class="gradient-text">Comprehensive Services</span></h2>
-        <p>
-          From initial conceptualization to final execution, we provide turnkey
-          solutions covering architecture, IP selection, consultancy, manpower
-          provision, and seamless implementation of advanced technologies.
-        </p>
-        <div class="feature-list">
-          <div class="feature-item">
-            <div class="feature-title">
-              <span class="feature-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                  />
-                </svg>
-              </span>
-              Turnkey DFT Implementation
-            </div>
-            <div class="feature-desc">
-              Complete Design for Test solutions from architecture planning to
-              final implementation. We cover every aspect including IP
-              selection, consultancy, and resource provision, empowering clients
-              to navigate complex testing challenges with confidence.
-            </div>
-          </div>
-          <div class="feature-item">
-            <div class="feature-title">
-              <span class="feature-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"
-                  />
-                </svg>
-              </span>
-              Custom Security Solutions
-            </div>
-            <div class="feature-desc">
-              Tailored AI-based surveillance systems for specific requirements
-              where video analytics, facial recognition, and intelligent
-              monitoring are essential. Our software enhances existing CCTV
-              infrastructure with powerful analytics capabilities.
-            </div>
-          </div>
-          <div class="feature-item">
-            <div class="feature-title">
-              <span class="feature-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
-                  />
-                </svg>
-              </span>
-              RISC‑V Integration Services
-            </div>
-            <div class="feature-desc">
-              Expert consultation and implementation of RISC‑V processor
-              architectures. We provide complete support from architecture
-              selection to system integration, enabling clients to leverage
-              open-source processor technology effectively.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="section section-gray">
-      <div class="parallax-bg"></div>
-      <div class="content">
-        <h2><span class="gradient-text">Get In Touch</span></h2>
-        <p>
-          Ready to transform your semiconductor design or security
-          infrastructure? Connect with our team of experts to discuss how we can
-          help bring your vision to life with innovative, cost-effective
-          solutions.
-        </p>
-        <div class="contact-grid">
-          <div class="contact-card">
-            <div class="contact-icon">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
-                />
-              </svg>
-            </div>
-            <div class="contact-title">Email Us</div>
-            <div class="contact-detail">
-              <a
-                href="mailto:contact@socteamup.com"
-                style="color: inherit; text-decoration: none"
-                >contact@socteamup.com</a
-              >
-            </div>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
-                />
-              </svg>
-            </div>
-            <div class="contact-title">Call Us</div>
-            <div class="contact-detail">
-              <a
-                href="tel:+917428663356"
-                style="color: inherit; text-decoration: none"
-                >+91 7428663356</a
-              >
-            </div>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                />
-              </svg>
-            </div>
-            <div class="contact-title">Visit Us</div>
-            <div class="contact-detail">
-              2nd Floor, PS-1D, Sector 29,<br />Arun Vihar, Noida,<br />Uttar
-              Pradesh 201303, India
-            </div>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                />
-              </svg>
-            </div>
-            <div class="contact-title">DPIIT Recognized</div>
-            <div class="contact-detail">
-              Government of India Certified Startup
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer Section -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="social-links">
-          <a href="#" class="social-icon" aria-label="Instagram">
+  <!-- Key Features Section -->
+  <section class="section section-dark">
+    <div class="parallax-bg"></div>
+    <div class="content">
+      <h2><span class="gradient-text">Key Features</span></h2>
+      <p>
+        The platform brings together AI-powered detection, live video
+        streaming, cloud storage, and a full user management system —
+        all built from scratch for the AI Security Camera System.
+      </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="icon">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path
-                d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"
-              />
+                d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z" />
             </svg>
-          </a>
-          <a href="#" class="social-icon" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-              />
-            </svg>
-          </a>
-          <a href="#" class="social-icon" aria-label="X (Twitter)">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-              />
-            </svg>
-          </a>
-          <a href="#" class="social-icon" aria-label="LinkedIn">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"
-              />
-            </svg>
-          </a>
+          </div>
+          <h3>Live Camera Dashboard</h3>
+          <p>
+            A real-time web dashboard displaying all registered surveillance
+            cameras. Users can browse, filter, and view live or recorded
+            feeds directly from the browser with no additional software.
+          </p>
+          <p style="margin-top: 20px; color: #00ffe5">
+            <span class="highlight">✓</span> Live Feed Viewer<br />
+            <span class="highlight">✓</span> Camera Management<br />
+            <span class="highlight">✓</span> Favourites System
+          </p>
         </div>
-        <div class="copyright">
-          © 2025 SoCTeamup Semiconductors Pvt. Ltd. All rights reserved.
+        <div class="card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+          </div>
+          <h3>AI Object Detection</h3>
+          <p>
+            Integrates YOLOv8/YOLO11 deep learning models to detect and
+            classify objects in video footage. Provides time-stamped
+            detection logs, scene descriptions, and automated threat alerts.
+          </p>
+          <p style="margin-top: 20px; color: #00ffe5">
+            <span class="highlight">✓</span> YOLOv8 / YOLO11<br />
+            <span class="highlight">✓</span> Real-time Detection<br />
+            <span class="highlight">✓</span> Auto Logging
+          </p>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
+            </svg>
+          </div>
+          <h3>Secure Auth &amp; Access</h3>
+          <p>
+            Full user authentication with session management, role-based
+            access for camera owners vs viewers, and encrypted credential
+            storage — demonstrating full-stack security practices.
+          </p>
+          <p style="margin-top: 20px; color: #00ffe5">
+            <span class="highlight">✓</span> Login / Signup<br />
+            <span class="highlight">✓</span> Session Management<br />
+            <span class="highlight">✓</span> Role-Based Access
+          </p>
         </div>
       </div>
-    </footer>
-  </body>
+    </div>
+  </section>
+
+  <!-- Tech Stack Section -->
+  <section class="section section-gray">
+    <div class="parallax-bg"></div>
+    <div class="content">
+      <h2><span class="gradient-text">Technology Stack</span></h2>
+      <p>
+        Built using industry-standard tools and frameworks, the project demonstrates
+        practical knowledge of full-stack development, machine learning integration,
+        and scalable system design.
+      </p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-title">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 3L5 6.99h3V14h2V6.99h3L9 3zm7 14.01V10h-2v7.01h-3L15 21l4-3.99h-3z" />
+              </svg>
+            </span>
+            Backend — Node.js &amp; Express
+          </div>
+          <div class="feature-desc">
+            The server is built with Node.js and Express, handling REST API
+            routes for camera management, authentication, favourites, and AI
+            analysis triggers. MongoDB is used for persistent data storage with
+            Mongoose ODM for schema management.
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              </svg>
+            </span>
+            Frontend — EJS &amp; TailwindCSS
+          </div>
+          <div class="feature-desc">
+            Dynamic server-side rendered views using EJS templates styled with
+            TailwindCSS. The UI is responsive, dark-themed, and includes
+            animations and smooth transitions for a modern user experience.
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 4.08-3.05 7.44-7 7.93v2.02c5.05-.5 9-4.76 9-9.95s-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm-1-11h2v6h-2zm0 8h2v2h-2z" />
+              </svg>
+            </span>
+            AI Layer — Python &amp; YOLO
+          </div>
+          <div class="feature-desc">
+            A Python microservice using YOLOv8 / YOLO11 processes video frames
+            and returns detection results to the Node.js server via internal
+            APIs. Bull queues and Redis are used to handle asynchronous
+            processing of video chunks without blocking the main server.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- System Architecture Section -->
+  <section class="section section-dark">
+    <div class="parallax-bg"></div>
+    <div class="content">
+      <h2><span class="gradient-text">System Modules</span></h2>
+      <p>
+        The project is organized into clearly defined modules, each independently
+        developed and tested, then integrated into the final system.
+      </p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-title">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              </svg>
+            </span>
+            Camera Management Module
+          </div>
+          <div class="feature-desc">
+            Allows authenticated users to register new cameras, assign locations,
+            upload video feeds, and update camera metadata. Camera owners can
+            manage their devices from a dedicated host dashboard with full CRUD
+            operations.
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
+              </svg>
+            </span>
+            AI Analysis Pipeline
+          </div>
+          <div class="feature-desc">
+            Video chunks are queued using Bull and processed by a Python
+            YOLO worker. Results including object labels, timestamps, and
+            scene summaries are stored in MongoDB and displayed in real-time
+            alongside the video feed on the analysis page.
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+              </svg>
+            </span>
+            User Auth &amp; Favourites
+          </div>
+          <div class="feature-desc">
+            Passport.js handles authentication with hashed passwords (bcrypt).
+            Logged-in users can add cameras to a personal favourites list,
+            enabling quick access to frequently monitored feeds from a
+            dedicated favourites dashboard.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Details Section -->
+  <section class="section section-gray">
+    <div class="parallax-bg"></div>
+    <div class="content">
+      <h2><span class="gradient-text">Project Details</span></h2>
+      <p>
+        The system was designed, developed, and tested as an end-to-end
+        surveillance platform with AI-powered video analytics and a modern
+        web dashboard.
+      </p>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+            </svg>
+          </div>
+          <div class="contact-title">Platform</div>
+          <div class="contact-detail">AI Security Camera System</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+          </div>
+          <div class="contact-title">Domain</div>
+          <div class="contact-detail">AI &amp; Full-Stack Web Development</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+            </svg>
+          </div>
+          <div class="contact-title">Stack</div>
+          <div class="contact-detail">Node.js, Express, MongoDB,<br />Python, YOLO, Redis</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+          </div>
+          <div class="contact-title">Built</div>
+          <div class="contact-detail">2025&ndash;2026</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="social-links">
+        <a href="#" class="social-icon" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z" />
+          </svg>
+        </a>
+        <a href="#" class="social-icon" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+          </svg>
+        </a>
+        <a href="#" class="social-icon" aria-label="X (Twitter)">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </a>
+        <a href="#" class="social-icon" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+          </svg>
+        </a>
+      </div>
+      <div class="copyright">
+        &copy; 2025 AI Security Camera System &mdash; Security Camera Monitoring Interface
+      </div>
+    </div>
+  </footer>
+</body>
+
 </html>

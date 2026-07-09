@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  # Redis for BullMQ job queues
+  redis:
+    image: redis:7-alpine
+    container_name: security-camera-redis
+    ports:
+      - "6379:6379"  # This is the "bridge" between Windows and Docker
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Local MongoDB for development
+  # Uncomment if you want to use local MongoDB instead of Atlas
+  # mongodb:
+  #   image: mongo:7
+  #   container_name: security-camera-mongodb
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: root
+  #     MONGO_INITDB_DATABASE: security_camera
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 5
+
+  # Optional: Redis Commander for Redis GUI
+  # Uncomment for debugging Redis queues
+  # redis-commander:
+  #   image: rediscommander/redis-commander:latest
+  #   container_name: redis-commander
+  #   environment:
+  #     - REDIS_HOSTS=local:redis:6379
+  #   ports:
+  #     - "8081:8081"
+  #   depends_on:
+  #     - redis
+  #   restart: unless-stopped
+
+volumes:
+  redis_data:
+    driver: local
+  # mongodb_data:
+  #   driver: local

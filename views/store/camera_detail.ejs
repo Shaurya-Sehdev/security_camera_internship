@@ -1,479 +1,487 @@
 <%- include("../partials/head") %>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-  
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #000000;
-    color: #ffffff;
-    margin: 0;
-    padding: 0;
-  }
-  
-  main {
-    min-height: 100vh;
-    padding: 60px 20px;
-    position: relative;
-  }
-  
-  /* Background decorations */
-  .bg-decoration {
-    position: fixed;
-    pointer-events: none;
-    z-index: 0;
-  }
-  
-  .bg-glow-1 {
-    top: 5%;
-    left: 5%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(0, 255, 229, 0.15) 0%, transparent 70%);
-    filter: blur(80px);
-  }
-  
-  .bg-glow-2 {
-    bottom: 5%;
-    right: 5%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(0, 184, 212, 0.12) 0%, transparent 70%);
-    filter: blur(70px);
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .page-header {
-    text-align: center;
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeInUp 1s ease forwards;
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000000;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .page-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 900;
-    margin-bottom: 15px;
-    letter-spacing: -2px;
-    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-  }
-  
-  .camera-detail-card {
-    max-width: 900px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(0, 255, 229, 0.2);
-    border-radius: 24px;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 40px rgba(0, 255, 229, 0.15);
-    opacity: 0;
-    animation: slideUp 1s ease forwards 0.3s;
-  }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .video-container {
-    width: 100%;
-    height: 500px;
-    background: #000000;
-    border-bottom: 2px solid rgba(0, 255, 229, 0.3);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .camera-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .no-video-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(0, 255, 229, 0.05) 0%, rgba(0, 184, 212, 0.05) 100%);
-    color: #666666;
-  }
-  
-  .no-video-icon {
-    font-size: 5rem;
-    margin-bottom: 15px;
-    opacity: 0.3;
-  }
-  
-  .no-video-text {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  
-  .camera-content {
-    padding: 40px;
-  }
-  
-  .camera-name {
-    font-size: clamp(2rem, 4vw, 2.5rem);
-    font-weight: 800;
-    color: #00ffe5;
-    margin-bottom: 30px;
-    letter-spacing: -1px;
-    line-height: 1.2;
-  }
-  
-  .info-section {
-    background: rgba(0, 255, 229, 0.05);
-    border-left: 4px solid #00ffe5;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 25px;
-    transition: all 0.3s ease;
-  }
-  
-  .info-section:hover {
-    background: rgba(0, 255, 229, 0.08);
-    border-left-width: 6px;
-  }
-  
-  .info-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .info-icon {
-    font-size: 1.4rem;
-  }
-  
-  .info-value {
-    font-size: 1.2rem;
-    color: #cccccc;
-    line-height: 1.6;
-    font-weight: 500;
-  }
-  
-  .status-badge {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .status-online {
-    background: rgba(0, 255, 136, 0.2);
-    color: #00ff88;
-    border: 2px solid #00ff88;
-  }
-  
-  .status-offline {
-    background: rgba(255, 68, 68, 0.2);
-    color: #ff4444;
-    border: 2px solid #ff4444;
-  }
-  
-  .status-active {
-    background: rgba(255, 170, 0, 0.2);
-    color: #ffaa00;
-    border: 2px solid #ffaa00;
-  }
-  
-  .description-section {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(0, 255, 229, 0.15);
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 25px;
-  }
-  
-  .description-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .description-text {
-    font-size: 1.1rem;
-    color: #aaaaaa;
-    line-height: 1.7;
-  }
-  
-  .favourite-section {
-    margin-top: 30px;
-    padding-top: 30px;
-    border-top: 1px solid rgba(0, 255, 229, 0.2);
-  }
-  
-  .back-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 30px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(0, 255, 229, 0.3);
-    color: #00ffe5;
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-decoration: none;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    margin-bottom: 40px;
-  }
-  
-  .back-button:hover {
-    background: rgba(0, 255, 229, 0.1);
-    border-color: #00ffe5;
-    transform: translateX(-5px);
-  }
-  
-  .action-buttons {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-  }
-  
-  .btn-primary {
-    flex: 1;
-    min-width: 200px;
-    padding: 16px 32px;
-    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-    color: #000000;
-    font-size: 1.1rem;
-    font-weight: 800;
-    text-decoration: none;
-    border-radius: 12px;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 25px rgba(0, 255, 229, 0.4);
-    position: relative;
-    overflow: hidden;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s;
-  }
-  
-  .btn-primary:hover::before {
-    left: 100%;
-  }
-  
-  .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 35px rgba(0, 255, 229, 0.6);
-  }
-  
-  .btn-secondary {
-    flex: 1;
-    min-width: 200px;
-    padding: 16px 32px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(0, 255, 229, 0.3);
-    color: #00ffe5;
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-decoration: none;
-    border-radius: 12px;
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .btn-secondary:hover {
-    background: rgba(0, 255, 229, 0.1);
-    border-color: #00ffe5;
-    transform: translateY(-3px);
-  }
-  
-  @media (max-width: 768px) {
+
     main {
-      padding: 40px 15px;
+      min-height: 100vh;
+      padding: 60px 20px;
+      position: relative;
     }
-    
-    .video-container {
-      height: 300px;
+
+    /* Background decorations */
+    .bg-decoration {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
     }
-    
-    .camera-content {
-      padding: 25px;
+
+    .bg-glow-1 {
+      top: 5%;
+      left: 5%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 255, 229, 0.15) 0%, transparent 70%);
+      filter: blur(80px);
     }
-    
+
+    .bg-glow-2 {
+      bottom: 5%;
+      right: 5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 184, 212, 0.12) 0%, transparent 70%);
+      filter: blur(70px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
     .page-header {
+      text-align: center;
+      margin-bottom: 60px;
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 15px;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .camera-detail-card {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 229, 0.2);
+      border-radius: 24px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(0, 255, 229, 0.15);
+      opacity: 0;
+      animation: slideUp 1s ease forwards 0.3s;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .video-container {
+      width: 100%;
+      height: 500px;
+      background: #000000;
+      border-bottom: 2px solid rgba(0, 255, 229, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .camera-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .no-video-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(0, 255, 229, 0.05) 0%, rgba(0, 184, 212, 0.05) 100%);
+      color: #666666;
+    }
+
+    .no-video-icon {
+      font-size: 5rem;
+      margin-bottom: 15px;
+      opacity: 0.3;
+    }
+
+    .no-video-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .camera-content {
+      padding: 40px;
+    }
+
+    .camera-name {
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      font-weight: 800;
+      color: #00ffe5;
+      margin-bottom: 30px;
+      letter-spacing: -1px;
+      line-height: 1.2;
+    }
+
+    .info-section {
+      background: rgba(0, 255, 229, 0.05);
+      border-left: 4px solid #00ffe5;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .info-section:hover {
+      background: rgba(0, 255, 229, 0.08);
+      border-left-width: 6px;
+    }
+
+    .info-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .info-icon {
+      font-size: 1.4rem;
+    }
+
+    .info-value {
+      font-size: 1.2rem;
+      color: #cccccc;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-online {
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+      border: 2px solid #00ff88;
+    }
+
+    .status-offline {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+      border: 2px solid #ff4444;
+    }
+
+    .status-active {
+      background: rgba(255, 170, 0, 0.2);
+      color: #ffaa00;
+      border: 2px solid #ffaa00;
+    }
+
+    .description-section {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(0, 255, 229, 0.15);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+
+    .description-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .description-text {
+      font-size: 1.1rem;
+      color: #aaaaaa;
+      line-height: 1.7;
+    }
+
+    .favourite-section {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(0, 255, 229, 0.2);
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 255, 229, 0.3);
+      color: #00ffe5;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all 0.3s ease;
       margin-bottom: 40px;
     }
-    
-    .info-section {
-      padding: 20px;
-    }
-    
-    .action-buttons {
-      flex-direction: column;
-    }
-    
-    .btn-primary,
-    .btn-secondary {
-      width: 100%;
-      min-width: unset;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .camera-name {
-      font-size: 1.8rem;
-    }
-    
-    .info-value {
-      font-size: 1rem;
-    }
-    
-    .description-text {
-      font-size: 1rem;
-    }
-  }
-</style>
-</head>
-<body>
-  <!-- Background decorations -->
-  <div class="bg-decoration bg-glow-1"></div>
-  <div class="bg-decoration bg-glow-2"></div>
-  
-  <%- include("../partials/nav") %>
-  
-  <main>
-    <div class="container">
-      <a href="/cameras" class="back-button">
-        <span>←</span>
-        <span>Back to Cameras</span>
-      </a>
-      
-      <div class="page-header">
-        <h1 class="page-title">Camera Feed Details</h1>
-      </div>
-      
-      <div class="camera-detail-card">
-        <div class="video-container">
-          <% if (camera.videoUrl) { %>
-            <video 
-              src="<%= camera.videoUrl %>" 
-              controls 
-              autoplay 
-              muted 
-              class="camera-video"
-            ></video>
-          <% } else { %>
-            <div class="no-video-placeholder">
-              <div class="no-video-icon">📹</div>
-              <div class="no-video-text">No Video Available</div>
-            </div>
-          <% } %>
-        </div>
 
-        <div class="camera-content">
-          <h2 class="camera-name"><%= camera.cameraName || 'Unnamed Camera' %></h2>
-          
-          <div class="info-section">
-            <div class="info-label">
-              <span class="info-icon">📍</span>
-              <span>Location</span>
-            </div>
-            <div class="info-value"><%= camera.location || 'N/A' %></div>
+    .back-button:hover {
+      background: rgba(0, 255, 229, 0.1);
+      border-color: #00ffe5;
+      transform: translateX(-5px);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      flex: 1;
+      min-width: 200px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      color: #000000;
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-decoration: none;
+      border-radius: 12px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 25px rgba(0, 255, 229, 0.4);
+      position: relative;
+      overflow: hidden;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px rgba(0, 255, 229, 0.6);
+    }
+
+    .btn-secondary {
+      flex: 1;
+      min-width: 200px;
+      padding: 16px 32px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 255, 229, 0.3);
+      color: #00ffe5;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 12px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 255, 229, 0.1);
+      border-color: #00ffe5;
+      transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding: 40px 15px;
+      }
+
+      .video-container {
+        height: 300px;
+      }
+
+      .camera-content {
+        padding: 25px;
+      }
+
+      .page-header {
+        margin-bottom: 40px;
+      }
+
+      .info-section {
+        padding: 20px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .camera-name {
+        font-size: 1.8rem;
+      }
+
+      .info-value {
+        font-size: 1rem;
+      }
+
+      .description-text {
+        font-size: 1rem;
+      }
+    }
+  </style>
+  </head>
+
+  <body>
+    <!-- Background decorations -->
+    <div class="bg-decoration bg-glow-1"></div>
+    <div class="bg-decoration bg-glow-2"></div>
+
+    <%- include("../partials/nav") %>
+
+      <main>
+        <div class="container">
+          <a href="/cameras" class="back-button">
+            <span>←</span>
+            <span>Back to Cameras</span>
+          </a>
+
+          <div class="page-header">
+            <h1 class="page-title">Camera Feed Details</h1>
           </div>
-          
-          <div class="info-section">
-            <div class="info-label">
-              <span class="info-icon">⚡</span>
-              <span>Status</span>
+
+          <div class="camera-detail-card">
+            <div class="video-container">
+              <% if (camera.videoUrl) { %>
+                <video src="<%= camera.videoUrl %>" controls autoplay muted class="camera-video"></video>
+                <% } else { %>
+                  <div class="no-video-placeholder">
+                    <div class="no-video-icon">📹</div>
+                    <div class="no-video-text">No Video Available</div>
+                  </div>
+                  <% } %>
             </div>
-            <div class="info-value">
-              <span class="status-badge <%= camera.status === 'Online' ? 'status-online' : (camera.status === 'Active' ? 'status-active' : 'status-offline') %>">
-                <%= camera.status || 'Offline' %>
-              </span>
+
+            <div class="camera-content">
+              <h2 class="camera-name">
+                <%= camera.cameraName || 'Unnamed Camera' %>
+              </h2>
+
+              <div class="info-section">
+                <div class="info-label">
+                  <span class="info-icon">📍</span>
+                  <span>Location</span>
+                </div>
+                <div class="info-value">
+                  <%= camera.location || 'N/A' %>
+                </div>
+              </div>
+
+              <div class="info-section">
+                <div class="info-label">
+                  <span class="info-icon">⚡</span>
+                  <span>Status</span>
+                </div>
+                <div class="info-value">
+                  <span
+                    class="status-badge <%= camera.status === 'Online' ? 'status-online' : (camera.status === 'Active' ? 'status-active' : 'status-offline') %>">
+                    <%= camera.status || 'Offline' %>
+                  </span>
+                </div>
+              </div>
+
+              <div class="info-section">
+                <div class="info-label">
+                  <span class="info-icon">🎯</span>
+                  <span>Detection Status</span>
+                </div>
+                <div class="info-value">
+                  <%= camera.detectionStatus || 'No detection data available.' %>
+                </div>
+              </div>
+
+              <div class="description-section">
+                <div class="description-label">
+                  <span>Description</span>
+                </div>
+                <p class="description-text">
+                  <%= camera.description || 'No description available.' %>
+                </p>
+              </div>
+
+              <div class="action-buttons">
+                <a href="/cameras/<%= camera._id %>/aisecure" class="btn-primary"
+                  style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                  <span>Analyze with AI</span>
+                </a>
+                <button class="btn-primary">Download Recording</button>
+                <button class="btn-secondary">Share Camera</button>
+              </div>
+
+              <div class="favourite-section">
+                <%- include("../partials/favourite") %>
+              </div>
             </div>
-          </div>
-          
-          <div class="info-section">
-            <div class="info-label">
-              <span class="info-icon">🎯</span>
-              <span>Detection Status</span>
-            </div>
-            <div class="info-value"><%= camera.detectionStatus || 'No detection data available.' %></div>
-          </div>
-          
-          <div class="description-section">
-            <div class="description-label">
-              <span>Description</span>
-            </div>
-            <p class="description-text"><%= camera.description || 'No description available.' %></p>
-          </div>
-          
-          <div class="action-buttons">
-  <a href="/cameras/<%= camera._id %>/aisecure" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-    <span>AISecure Now</span>
-  </a>
-  <button class="btn-primary">Download Recording</button>
-  <button class="btn-secondary">Share Camera</button>
-</div>
-          
-          <div class="favourite-section">
-            <%- include("../partials/favourite") %>
           </div>
         </div>
-      </div>
-    </div>
-  </main>
-</body>
-</html>
+      </main>
+  </body>
+
+  </html>

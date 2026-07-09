@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const logger = require("../utils/logger");
 
 exports.getFavouriteList = (req, res, next) => {
-  Favourite.find()
+  Favourite.find({ userEmail: req.session.userEmail || "anonymous@security.com" })
     .populate("cameraId")
     .sort({ createdAt: -1 })
     .then((favourites) => {
@@ -40,13 +40,19 @@ exports.postAddToFavourite = async (req, res, next) => {
       return res.redirect("/favourites");
     }
 
-    const existingFav = await Favourite.findOne({ cameraId });
+    const existingFav = await Favourite.findOne({ 
+      cameraId: cameraId, 
+      userEmail: req.session.userEmail || "anonymous@security.com" 
+    });
     if (existingFav) {
-      logger.info(`Camera already in favourites: ${cameraId}`);
+      logger.info(`Camera already in favourites for this user: ${cameraId}`);
       return res.redirect("/favourites");
     }
 
-    await new Favourite({ cameraId }).save();
+    await new Favourite({ 
+      cameraId, 
+      userEmail: req.session.userEmail || "anonymous@security.com" 
+    }).save();
     logger.info(`Favourite added successfully: ${cameraId}`);
     return res.redirect("/favourites");
   } catch (err) {
@@ -64,7 +70,10 @@ exports.postRemoveFromFavourite = async (req, res, next) => {
       return res.redirect("/favourites");
     }
 
-    const deletedFav = await Favourite.findOneAndDelete({ cameraId });
+    const deletedFav = await Favourite.findOneAndDelete({ 
+      cameraId: cameraId, 
+      userEmail: req.session.userEmail || "anonymous@security.com" 
+    });
     if (!deletedFav) {
       logger.warn(`Favourite not found: ${cameraId}`);
       return res.redirect("/favourites");

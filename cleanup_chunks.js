@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 
-const baseDir = path.join('C:', 'Shaurya', 'BACK-END', 'security_camera', 'public', 'videos');
+const baseDir = path.join(__dirname, 'public', 'videos');
 
 const DIRS_TO_CLEAN = [
     path.join(baseDir, 'fast_temp_chunks'),

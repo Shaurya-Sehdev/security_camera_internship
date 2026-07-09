@@ -1,5 +1,6 @@
 require("dotenv").config();
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -7,6 +8,7 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const { validateConfig } = require("./utils/configValidator");
 const logger = require("./utils/logger");
 const healthController = require("./controllers/healthController");
+const { connectMongoDB, closeMongoDB } = require("./utils/mongodb");
 
 // Validate configuration before starting
 if (!validateConfig()) {
@@ -15,7 +17,6 @@ if (!validateConfig()) {
 }
 
 const app = express();
-
 const storeRouter = require("./routes/storeRouter");
 const hostRouter = require("./routes/hostRouter");
 const authRouter = require("./routes/authRouter");
@@ -27,15 +28,14 @@ const { sanitizeInput } = require("./middleware/validation");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
-
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.json({ limit: "10mb" }));
-app.use(express.static(path.join(rootDir, "public")));
 
+app.use("/videos", express.static(path.join(__dirname, "videos")));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(sanitizeInput);
 
 const DB_PATH = process.env.MONGO_URL;
-
 if (!DB_PATH) {
   logger.error("FATAL: MONGO_URL not found in environment variables!");
   process.exit(1);
@@ -79,6 +79,7 @@ function ensureAuth(req, res, next) {
   if (req.session.isLoggedIn) return next();
   res.redirect("/login");
 }
+
 app.use("/host", ensureAuth, hostRouter);
 
 // Health check endpoints
@@ -93,44 +94,30 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-mongoose
-  .connect(DB_PATH, {
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-  })
-  .then(() => {
-    logger.success("Connected to MongoDB");
-    logger.info(`Database: ${DB_PATH.split("@")[1]?.split("?")[0] || "local"}`);
-
+// Start server with MongoDB connection
+async function startServer() {
+  try {
+    await connectMongoDB({ workerName: "Main App" });
+    
     app.listen(PORT, () => {
       logger.success(`Server running at http://localhost:${PORT}`);
       logger.info(`Environment: ${process.env.NODE_ENV || "development"}`);
     });
-  })
-  .catch((err) => {
-    logger.error("MongoDB Connection Error", err);
+  } catch (err) {
+    logger.error("Failed to start server", err);
     process.exit(1);
-  });
+  }
+}
 
-// Handle MongoDB connection errors
-mongoose.connection.on("error", (err) => {
-  logger.error("MongoDB connection error", err);
-});
+// Start background video normalization engine
+require("./utils/videoOptimizer").startOptimizer();
 
-mongoose.connection.on("disconnected", () => {
-  logger.warn("MongoDB disconnected");
-});
-
-mongoose.connection.on("reconnected", () => {
-  logger.info("MongoDB reconnected");
-});
+startServer();
 
 const shutdown = async () => {
   logger.info("Shutting down gracefully...");
-
   try {
-    await mongoose.connection.close();
-    logger.success("MongoDB connection closed");
+    await closeMongoDB("Main App");
     process.exit(0);
   } catch (err) {
     logger.error("Error during shutdown", err);

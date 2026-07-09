@@ -14,10 +14,9 @@ router.get("/camera/:cameraId/results",
   validateObjectId("cameraId"), 
   analysisController.getAnalysisResults
 );
-router.get("/camera/:cameraId/status", 
-  rateLimit(60, 60000), 
-  validateObjectId("cameraId"), 
-  analysisController.getAnalysisStatus
+router.get("/camera/:cameraId/stream",
+  validateObjectId("cameraId"),
+  analysisController.getRealtimeStream
 );
 
 module.exports = router;

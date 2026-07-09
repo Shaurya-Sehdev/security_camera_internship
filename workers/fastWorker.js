@@ -6,7 +6,7 @@ const { connection, FAST_QUEUE, SLOW_QUEUE } = require("../config/redis");
 const { splitVideo } = require("../utils/ffmpeg");
 const Analysis = require("../models/analysis");
 const checkRedis = require("../utils/redisCheck");
-const mongoose = require("mongoose");
+const { connectMongoDB, closeMongoDB } = require("../utils/mongodb");
 const logger = require("../utils/logger");
 
 // Video chunking configuration
@@ -26,7 +26,7 @@ const fastWorker = new Worker(
     logger.info(`[FAST WORKER] Job ID: ${job.id}, Type: ${name}`);
 
     if (name === "initialVideoSplit") {
-      const { videoPath, fastTempDir, slowTempDir, userId, cameraId } = data;
+      const { videoPath, fastTempDir, slowTempDir, userId, userEmail, cameraId } = data;
 
       logger.info(`[FFmpeg] Starting SLOW splitting (${SLOW_CHUNK_TIME}s)...`);
       const { totalChunks: slowChunks } = await splitVideo(
@@ -74,6 +74,29 @@ const fastWorker = new Worker(
           }
         );
       }
+
+      // Queue ALL slow chunks for Deep Dive analysis upfront
+      for (let j = 0; j < slowChunks; j++) {
+        await slowQueue.add(
+          "detailedAnalysis",
+          {
+            slowChunkId: j,
+            slowChunkDir: slowTempDir,
+            userId,
+            userEmail,   // <-- forwarded from logged-in session
+            cameraId,
+            videoPath,
+            totalChunks: slowChunks,
+            triggeredByFastChunk: null, // Since we process all chunks now
+          },
+          {
+            jobId: `slow-chunk-analysis-${cameraId}-${j}-${Date.now()}`,
+            removeOnComplete: true,
+            removeOnFail: false,
+          }
+        );
+      }
+
       return { status: "Split Complete", fastChunks, slowChunks };
     }
 
@@ -115,70 +138,79 @@ const fastWorker = new Worker(
         );
 
         // Run YOLO detection on video chunk
-        const fastResult = await new Promise((resolve, reject) => {
-          const options = {
-            timeout: 20000,
-            env: { ...process.env },
-          };
+        const axios = require("axios");
 
-          exec(
-            `"${PYTHON_PATH}" "${script}" "${chunkPath}"`,
-            options,
-            (err, stdout, stderr) => {
-              if (err) {
-                console.error(
-                  `[ERROR] YOLO processing failed for chunk ${chunkId}:\n${stderr}`
-                );
-                return reject(err);
-              }
-              try {
-                const res = JSON.parse(stdout.trim());
-                if (res.confidence) {
-                  logger.info(`Chunk ${chunkId}: Detection confidence: ${(res.confidence * 100).toFixed(1)}%`);
-                }
-                if (res.error) {
-                  logger.warn(`YOLO processing warning for chunk ${chunkId}: ${res.error}`);
-                }
-                resolve(res.person_detected);
-              } catch (e) {
-                logger.error(`JSON Parse Error for chunk ${chunkId}`, e, { stdout });
-                reject(new Error(`JSON Parse Error: ${stdout}`));
-              }
-            }
-          );
+// Run YOLO detection on video chunk
+const fastResult = await new Promise(async (resolve, reject) => {
+  try {
+    // Attempt to use the Persistent AI Bridge first (Ultra Fast)
+    const bridgeResponse = await axios.post("http://localhost:5000", {
+        task: "fast_yolo",
+        videoPath: chunkPath
+    }, { timeout: 10000 });
+    
+    if (bridgeResponse.data && bridgeResponse.data.success) {
+        logger.info(`[BRIDGE] Chunk ${chunkId}: Analysis complete via persistent engine.`);
+        return resolve({ 
+            personDetected: bridgeResponse.data.person_detected, 
+            objectsTracked: bridgeResponse.data.objects_tracked || [] 
         });
+    }
+  } catch (bridgeErr) {
+    logger.warn(`[BRIDGE] Persistent engine unavailable, falling back to legacy spawning...`);
+  }
+
+  // Fallback to Legacy Process Spawning (Slow)
+  const options = {
+    timeout: 20000,
+    env: { ...process.env },
+  };
+
+  exec(
+    `"${PYTHON_PATH}" "${script}" "${chunkPath}"`,
+    options,
+    (err, stdout, stderr) => {
+      if (stderr && stderr.trim()) {
+        logger.error(`[PYTHON STDERR] Chunk ${chunkId}:\n${stderr.trim()}`);
+      }
+
+      const raw = (stdout || "").trim();
+      if (raw) {
+        try {
+          const res = JSON.parse(raw);
+          if (res.error) {
+            logger.error(`[YOLO SCRIPT ERROR] Chunk ${chunkId}: ${res.error}`);
+            return reject(new Error(res.error));
+          }
+          return resolve({ personDetected: res.person_detected, objectsTracked: res.objects_tracked || [] });
+        } catch (parseErr) {
+          return reject(new Error(`JSON Parse Error: ${raw}`));
+        }
+      }
+
+      if (err) {
+        logger.error(`[YOLO CRASH] Chunk ${chunkId} failed.`);
+        return reject(err);
+      }
+      return reject(new Error(`Empty output from YOLO script for chunk ${chunkId}`));
+    }
+  );
+});
 
         // Update analysis record with result
         await Analysis.findOneAndUpdate(
           { cameraId, chunkId, chunkType: "fast" },
           {
-            personDetected: fastResult,
+            personDetected: fastResult.personDetected,
+            objectsTracked: fastResult.objectsTracked,
             status: "completed",
           }
         );
 
-        // If person detected, queue detailed analysis
-        if (fastResult === true) {
+        // If person detected, we just log it since slow analysis is now queued for all chunks upfront
+        if (fastResult.personDetected === true) {
           logger.info(
-            `Chunk ${chunkId} (${formatTime(timestamp)}): Person detected → Queuing slow analysis for chunk ${slowChunkId}`
-          );
-
-          await slowQueue.add(
-            "detailedAnalysis",
-            {
-              slowChunkId,
-              slowChunkDir: slowTempDir,
-              userId,
-              cameraId,
-              videoPath,
-              totalChunks: totalSlowChunks,
-              triggeredByFastChunk: chunkId,
-            },
-            {
-              jobId: `slow-chunk-analysis-${slowChunkId}`,
-              removeOnComplete: true,
-              removeOnFail: false,
-            }
+            `Chunk ${chunkId} (${formatTime(timestamp)}): Person detected`
           );
           return { status: "Detected", chunkId, timestamp };
         } else {
@@ -203,7 +235,7 @@ const fastWorker = new Worker(
       }
     }
   },
-  { connection, concurrency: 4 }
+  { connection, concurrency: 2 }
 );
 
 function formatTime(seconds) {
@@ -217,7 +249,7 @@ const shutdown = async () => {
   
   try {
     await fastWorker.close();
-    await mongoose.connection.close();
+    await closeMongoDB("Fast Worker");
     logger.success("Fast Worker closed successfully");
     process.exit(0);
   } catch (error) {
@@ -249,32 +281,13 @@ async function startWorker() {
     process.exit(1);
   }
 
-  // Check MongoDB connection
-  const DB_PATH = process.env.MONGO_URL;
-  if (!DB_PATH) {
-    logger.error('MONGO_URL not found in environment variables');
-    process.exit(1);
-  }
-
+  // Connect to MongoDB with retry logic
   try {
-    await mongoose.connect(DB_PATH, {
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    });
-    logger.success('Fast Worker connected to MongoDB');
+    await connectMongoDB({ workerName: "Fast Worker" });
   } catch (error) {
     logger.error('MongoDB connection failed', error);
     process.exit(1);
   }
-
-  // Handle MongoDB connection errors
-  mongoose.connection.on("error", (err) => {
-    logger.error("MongoDB connection error in Fast Worker", err);
-  });
-
-  mongoose.connection.on("disconnected", () => {
-    logger.warn("MongoDB disconnected in Fast Worker");
-  });
 
   logger.info(`Fast Worker Active. Python Path: ${PYTHON_PATH}`);
   logger.info(`Listening on queue: ${FAST_QUEUE}`);

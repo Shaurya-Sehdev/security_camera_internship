@@ -1,0 +1,53 @@
+<%- include('../partials/head') %>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #000; color: #fff; min-height: 100vh; overflow-x: hidden; position: relative; }
+    .gradient-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(ellipse at top left, rgba(0, 255, 229, 0.08) 0%, transparent 50%), radial-gradient(ellipse at top right, rgba(0, 184, 212, 0.06) 0%, transparent 50%), radial-gradient(ellipse at bottom center, rgba(0, 230, 255, 0.05) 0%, transparent 60%), linear-gradient(180deg, #000 0%, #0a0a0a 50%, #000 100%); }
+    main { min-height: 100vh; display: flex; align-items:center; justify-content:center; padding: 100px 20px; position: relative; z-index: 1; }
+    .login-container { width: 100%; max-width: 500px; background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; padding: 45px; backdrop-filter: blur(18px); box-shadow: 0 0 30px rgba(0,255,229,0.08); position: relative; }
+    .form-title { font-size: 2.5rem; font-weight: 900; text-align: center; margin-bottom: 10px; background: linear-gradient(135deg, #00ffe5, #c0c0c0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .form-subtitle { text-align: center; color: #a0a0a0; margin-bottom: 35px; }
+    .form-group { margin-bottom: 22px; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 700; color: #00ffe5; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1.2px; }
+    .form-input { width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0, 255, 229, 0.3); border-radius: 12px; color: #fff; outline: none; transition: 0.3s; }
+    .form-input:focus { border-color: #00ffe5; box-shadow: 0 0 20px rgba(0,255,229,0.2); }
+    .btn-login { width: 100%; padding: 18px; background: linear-gradient(135deg, #00ffe5, #00b8d4); color: #000; font-weight: 900; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 10px; }
+    .alert-error { background: rgba(255,60,60,0.1); border: 1px solid rgba(255,60,60,0.3); color: #ff6b6b; padding: 12px; border-radius: 10px; margin-bottom: 25px; font-size: 0.9rem; text-align: center; }
+  </style>
+  </head>
+  <body>
+    <div class="gradient-bg"></div>
+    <%- include('../partials/nav') %>
+    <main>
+      <div class="login-container">
+        <h1 class="form-title">Join SecureAI</h1>
+        <p class="form-subtitle">Register to start your private surveillance</p>
+
+        <% if (error) { %>
+          <div class="alert-error"><%= error %></div>
+        <% } %>
+
+        <form action="/signup" method="POST">
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" placeholder="email@example.com" required class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Create Password</label>
+            <input type="password" name="password" placeholder="••••••••" required class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" name="confirmPassword" placeholder="••••••••" required class="form-input" />
+          </div>
+          <button type="submit" class="btn-login">Create Account</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 25px; font-size: 0.95rem; color: #888;">
+          Already have an account? <a href="/login" style="color: #00ffe5; text-decoration: none; font-weight: 700;">Login here</a>
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

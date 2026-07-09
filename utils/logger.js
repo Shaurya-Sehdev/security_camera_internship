@@ -23,31 +23,30 @@ function writeToFile(filename, message) {
 }
 
 const logger = {
-  info: (message, ...args) => {
-    const logMessage = `[${formatTimestamp()}] [INFO] ${message} ${args.length > 0 ? JSON.stringify(args) : ""}`;
+  info: (message) => {
+    const logMessage = `[${formatTimestamp()}] [INFO] ${message}`;
     console.log(logMessage);
     writeToFile(INFO_LOG, logMessage);
   },
 
-  error: (message, error = null, ...args) => {
+  error: (message, error = null) => {
     const errorDetails = error ? `\nStack: ${error.stack}` : "";
-    const logMessage = `[${formatTimestamp()}] [ERROR] ${message}${errorDetails} ${args.length > 0 ? JSON.stringify(args) : ""}`;
+    const logMessage = `[${formatTimestamp()}] [ERROR] ${message}${errorDetails}`;
     console.error(logMessage);
     writeToFile(ERROR_LOG, logMessage);
   },
 
-  warn: (message, ...args) => {
-    const logMessage = `[${formatTimestamp()}] [WARN] ${message} ${args.length > 0 ? JSON.stringify(args) : ""}`;
+  warn: (message) => {
+    const logMessage = `[${formatTimestamp()}] [WARN] ${message}`;
     console.warn(logMessage);
     writeToFile(INFO_LOG, logMessage);
   },
 
-  success: (message, ...args) => {
-    const logMessage = `[${formatTimestamp()}] [SUCCESS] ${message} ${args.length > 0 ? JSON.stringify(args) : ""}`;
+  success: (message) => {
+    const logMessage = `[${formatTimestamp()}] [SUCCESS] ${message}`;
     console.log(logMessage);
     writeToFile(INFO_LOG, logMessage);
   },
 };
 
 module.exports = logger;
-

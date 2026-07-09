@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const logger = require("../utils/logger");
 
 exports.getIndex = (req, res, next) => {
-  Camera.find()
+  Camera.find({ userEmail: req.session.userEmail || "anonymous@security.com" })
     .sort({ createdAt: -1 })
     .then((registeredCameras) => {
       res.render("store/camera_index", {
@@ -20,7 +20,7 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCameras = (req, res, next) => {
-  Camera.find()
+  Camera.find({ userEmail: req.session.userEmail || "anonymous@security.com" })
     .sort({ cameraName: 1 })
     .then((registeredCameras) => {
       res.render("store/camera_list", {
@@ -44,7 +44,7 @@ exports.getCameraDetails = (req, res, next) => {
     return res.redirect("/cameras");
   }
 
-  Camera.findById(cameraId)
+  Camera.findOne({ _id: cameraId, userEmail: req.session.userEmail || "anonymous@security.com" })
     .then((camera) => {
       if (!camera) {
         logger.warn(`Camera not found: ${cameraId}`);
@@ -73,7 +73,7 @@ exports.getAISecure = async (req, res, next) => {
       return res.redirect('/cameras');
     }
 
-    const camera = await Camera.findById(cameraId);
+    const camera = await Camera.findOne({ _id: cameraId, userEmail: req.session.userEmail || "anonymous@security.com" });
     
     if (!camera) {
       logger.warn(`Camera not found for AISecure: ${cameraId}`);

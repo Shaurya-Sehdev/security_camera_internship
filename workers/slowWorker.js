@@ -5,7 +5,7 @@ const path = require("path");
 const { connection, SLOW_QUEUE } = require("../config/redis");
 const Analysis = require("../models/analysis");
 const checkRedis = require("../utils/redisCheck");
-const mongoose = require("mongoose");
+const { connectMongoDB, closeMongoDB } = require("../utils/mongodb");
 const logger = require("../utils/logger");
 
 const PYTHON_PATH = process.env.PYTHON_PATH || "python";
@@ -19,7 +19,7 @@ const slowWorker = new Worker(
     logger.info(`[SLOW WORKER] Job ID: ${job.id}, Type: ${name}`);
 
     if (name === "detailedAnalysis") {
-      const { slowChunkId, slowChunkDir, userId, cameraId, videoPath, totalChunks, triggeredByFastChunk } = data;
+      const { slowChunkId, slowChunkDir, userId, userEmail, cameraId, videoPath, totalChunks, triggeredByFastChunk } = data;
 
       const chunkFileName = `slow_chunk_${slowChunkId
         .toString()
@@ -29,7 +29,7 @@ const slowWorker = new Worker(
 
       logger.info(`[SLIDE] Analyzing chunk ${slowChunkId}/${totalChunks} (${formatTime(timestamp)})...`);
 
-      // Save pending analysis record
+      // Save initial record with status
       await Analysis.findOneAndUpdate(
         { cameraId, chunkId: slowChunkId, chunkType: "slow" },
         {
@@ -38,23 +38,48 @@ const slowWorker = new Worker(
           chunkType: "slow",
           chunkId: slowChunkId,
           timestamp,
-          status: "processing",
+          status: "initializing_ai",
+          statusMessage: "Initializing Whisper & EasyOCR...",
           personDetected: true,
         },
         { upsert: true, new: true }
       );
 
       try {
+        // Update status for the Python phase
+        await Analysis.findOneAndUpdate(
+            { cameraId, chunkId: slowChunkId, chunkType: "slow" },
+            { status: "processing", statusMessage: "Deep Deep Analysis in progress..." }
+        );
+
         const pythonScript = path.join(__dirname, "..", "slide_processor.py");
-        const command = `"${PYTHON_PATH}" "${pythonScript}" "${chunkPath}" "${userId}"`;
+        const command = `"${PYTHON_PATH}" "${pythonScript}" "${chunkPath}" "${userId}" "${userEmail || ''}"`;
+
+        const axios = require("axios");
 
         // Run OCR and audio transcription analysis
-        const slideAnalysis = await new Promise((resolve, reject) => {
+        const slideAnalysis = await new Promise(async (resolve, reject) => {
+          try {
+            // Attempt to use the Persistent AI Bridge (Ultra Fast)
+            const bridgeResponse = await axios.post("http://localhost:5000", {
+                task: "deep_dive",
+                videoPath: chunkPath
+            }, { timeout: 120000 }); // Longer timeout for deep analysis
+            
+            if (bridgeResponse.data && bridgeResponse.data.success) {
+                logger.info(`[BRIDGE] Chunk ${slowChunkId}: Deep analysis complete via persistent engine.`);
+                return resolve(bridgeResponse.data);
+            }
+          } catch (bridgeErr) {
+            logger.warn(`[BRIDGE] Persistent engine unavailable for slow worker, falling back to legacy spawning...`);
+          }
+
+          // Legacy Fallback
           exec(
             command,
             {
               maxBuffer: 20 * 1024 * 1024,
-              timeout: 60000,
+              timeout: 120000, // Increased timeout for heavy loading
               env: { ...process.env },
             },
             (error, stdout, stderr) => {
@@ -78,6 +103,7 @@ const slowWorker = new Worker(
         });
 
         const analysis = slideAnalysis.slide_analysis;
+        const groqVerdict = slideAnalysis.groq_verdict || { is_suspicious: false, reason: '' };
 
         // Save analysis results to database
         await Analysis.findOneAndUpdate(
@@ -90,6 +116,10 @@ const slowWorker = new Worker(
               transcription: analysis.transcription || "",
               summary: analysis.summary || "",
               keyPoints: analysis.key_points || [],
+            },
+            groqVerdict: {
+              isSuspicious: groqVerdict.is_suspicious || false,
+              reason: groqVerdict.reason || "",
             },
           }
         );
@@ -143,7 +173,7 @@ const slowWorker = new Worker(
   },
   {
     connection,
-    concurrency: 1,
+    concurrency: 2,
     removeOnComplete: {
       count: 100,
       age: 24 * 3600,
@@ -175,7 +205,7 @@ const shutdown = async () => {
   
   try {
     await slowWorker.close();
-    await mongoose.connection.close();
+    await closeMongoDB("Slow Worker");
     logger.success("Slow Worker closed successfully");
     process.exit(0);
   } catch (error) {
@@ -195,32 +225,13 @@ async function startWorker() {
     process.exit(1);
   }
 
-  // Check MongoDB connection
-  const DB_PATH = process.env.MONGO_URL;
-  if (!DB_PATH) {
-    logger.error('MONGO_URL not found in environment variables');
-    process.exit(1);
-  }
-
+  // Connect to MongoDB with retry logic
   try {
-    await mongoose.connect(DB_PATH, {
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    });
-    logger.success('Slow Worker connected to MongoDB');
+    await connectMongoDB({ workerName: "Slow Worker" });
   } catch (error) {
     logger.error('MongoDB connection failed', error);
     process.exit(1);
   }
-
-  // Handle MongoDB connection errors
-  mongoose.connection.on("error", (err) => {
-    logger.error("MongoDB connection error in Slow Worker", err);
-  });
-
-  mongoose.connection.on("disconnected", () => {
-    logger.warn("MongoDB disconnected in Slow Worker");
-  });
 
   logger.info(`Slow Worker Active. Python: ${PYTHON_PATH}`);
   logger.info(`Listening on queue: ${SLOW_QUEUE}`);

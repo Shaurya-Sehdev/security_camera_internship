@@ -1,1083 +1,1424 @@
 <%- include("../partials/head") %>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-  
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #000000;
-    color: #ffffff;
-    margin: 0;
-    padding: 0;
-  }
-  
-  main {
-    min-height: 100vh;
-    padding: 60px 20px;
-    position: relative;
-  }
-  
-  /* Background decorations */
-  .bg-decoration {
-    position: fixed;
-    pointer-events: none;
-    z-index: 0;
-  }
-  
-  .bg-glow-1 {
-    top: 5%;
-    left: 5%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(0, 255, 229, 0.15) 0%, transparent 70%);
-    filter: blur(80px);
-  }
-  
-  .bg-glow-2 {
-    bottom: 5%;
-    right: 5%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(0, 184, 212, 0.12) 0%, transparent 70%);
-    filter: blur(70px);
-  }
-  
-  .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .page-header {
-    text-align: center;
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeInUp 1s ease forwards;
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000000;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .page-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 900;
-    margin-bottom: 15px;
-    letter-spacing: -2px;
-    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-  }
-  
-  .page-subtitle {
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    color: #aaaaaa;
-    font-weight: 500;
-    margin-top: 10px;
-  }
-  
-  .back-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 30px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(0, 255, 229, 0.3);
-    color: #00ffe5;
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-decoration: none;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    margin-bottom: 40px;
-    opacity: 0;
-    animation: fadeInUp 1s ease forwards 0.2s;
-  }
-  
-  .back-button:hover {
-    background: rgba(0, 255, 229, 0.1);
-    border-color: #00ffe5;
-    transform: translateX(-5px);
-  }
-  
-  .aisecure-container {
-    max-width: 1300px;
-    margin: 0 auto;
-    opacity: 0;
-    animation: slideUp 1s ease forwards 0.4s;
-  }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .camera-info-banner {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(0, 255, 229, 0.2);
-    border-radius: 16px;
-    padding: 25px 35px;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .camera-info-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .camera-info-icon {
-    font-size: 1.8rem;
-  }
-  
-  .camera-info-text {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .camera-info-label {
-    font-size: 0.85rem;
-    color: #888888;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-  }
-  
-  .camera-info-value {
-    font-size: 1.1rem;
-    color: #ffffff;
-    font-weight: 700;
-  }
-  
-  /* Split Screen Layout */
-  .split-screen-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 40px;
-  }
-  
-  /* Video Section */
-  .video-section {
-    background: rgba(255, 255, 255, 0.03);
-    border: 2px solid rgba(0, 255, 229, 0.3);
-    border-radius: 24px;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 50px rgba(0, 255, 229, 0.2);
-    position: relative;
-  }
-  
-  .video-section::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(135deg, rgba(0, 255, 229, 0.3), rgba(0, 184, 212, 0.3));
-    border-radius: 24px;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  
-  .video-section:hover::before {
-    opacity: 1;
-  }
-  
-  .video-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 25px 30px;
-    background: rgba(0, 255, 229, 0.05);
-    border-bottom: 2px solid rgba(0, 255, 229, 0.2);
-  }
-  
-  .video-header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .video-icon {
-    font-size: 2rem;
-  }
-  
-  .video-title {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: #00ffe5;
-    letter-spacing: -0.5px;
-  }
-  
-  .timestamp-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    background: rgba(0, 255, 229, 0.15);
-    border: 1px solid rgba(0, 255, 229, 0.3);
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #00ffe5;
-  }
-  
-  .video-container {
-    width: 100%;
-    height: 500px;
-    background: #000000;
-    position: relative;
-    overflow: hidden;
-  }
-  
- .camera-video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background-color: #000; /* keeps black bars clean if aspect ratio differs */
-}
 
-  
-  .no-video-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(0, 255, 229, 0.05) 0%, rgba(0, 184, 212, 0.05) 100%);
-    color: #666666;
-  }
-  
-  .no-video-icon {
-    font-size: 5rem;
-    margin-bottom: 15px;
-    opacity: 0.3;
-  }
-  
-  .no-video-text {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  
-  .video-controls {
-    padding: 20px 30px;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-  }
-  
-  /* Description Section */
-  .description-box {
-    background: rgba(255, 255, 255, 0.03);
-    border: 2px solid rgba(0, 255, 229, 0.3);
-    border-radius: 24px;
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 50px rgba(0, 255, 229, 0.2);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  
-  .description-box::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(135deg, rgba(0, 255, 229, 0.3), rgba(0, 184, 212, 0.3));
-    border-radius: 24px;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  
-  .description-box:hover::before {
-    opacity: 1;
-  }
-  
-  .description-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 25px 30px;
-    background: rgba(0, 255, 229, 0.05);
-    border-bottom: 2px solid rgba(0, 255, 229, 0.2);
-  }
-  
-  .description-icon {
-    font-size: 2rem;
-  }
-  
-  .description-title {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: #00ffe5;
-    letter-spacing: -0.5px;
-  }
-  
-  .description-content {
-    flex: 1;
-    font-size: 1.3rem;
-    line-height: 1.9;
-    color: #e0e0e0;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    padding: 35px 30px;
-    background: rgba(0, 255, 229, 0.02);
-    overflow-y: auto;
-    max-height: 500px;
-  }
-  
-  .description-content::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .description-content::-webkit-scrollbar-track {
-    background: rgba(0, 255, 229, 0.05);
-    border-radius: 10px;
-  }
-  
-  .description-content::-webkit-scrollbar-thumb {
-    background: rgba(0, 255, 229, 0.3);
-    border-radius: 10px;
-  }
-  
-  .description-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 255, 229, 0.5);
-  }
-  
-  .loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 400px;
-    gap: 25px;
-  }
-  
-  .loading-spinner {
-    width: 60px;
-    height: 60px;
-    border: 4px solid rgba(0, 255, 229, 0.2);
-    border-top: 4px solid #00ffe5;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  .loading-text {
-    font-size: 1.3rem;
-    color: #00ffe5;
-    font-weight: 700;
-    text-align: center;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-  
-  .empty-state {
-    text-align: center;
-    color: #888888;
-    font-size: 1.2rem;
-    font-weight: 500;
-    padding: 40px;
-  }
-  
-  /* Timestamp Highlight */
-  .timestamp-highlight {
-    display: inline-block;
-    padding: 3px 10px;
-    background: rgba(0, 255, 229, 0.2);
-    border-radius: 6px;
-    color: #00ffe5;
-    font-weight: 700;
-    margin: 0 4px;
-  }
-
-  .analysis-item {
-    padding: 20px;
-    margin-bottom: 15px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(0, 255, 229, 0.2);
-    border-radius: 12px;
-    transition: all 0.3s ease;
-  }
-
-  .analysis-item.active {
-    background: rgba(0, 255, 229, 0.1);
-    border-color: rgba(0, 255, 229, 0.5);
-    box-shadow: 0 0 20px rgba(0, 255, 229, 0.3);
-  }
-
-  .analysis-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .analysis-badge {
-    padding: 4px 10px;
-    background: rgba(0, 255, 229, 0.15);
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #00ffe5;
-  }
-
-  .analysis-body {
-    margin-top: 10px;
-  }
-
-  .analysis-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #00ffe5;
-    margin-bottom: 10px;
-  }
-
-  .analysis-text,
-  .analysis-transcription,
-  .analysis-summary {
-    margin-top: 15px;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    border-left: 3px solid rgba(0, 255, 229, 0.5);
-  }
-
-  .analysis-text strong,
-  .analysis-transcription strong,
-  .analysis-summary strong {
-    color: #00ffe5;
-    display: block;
-    margin-bottom: 8px;
-  }
-
-  .analysis-text ul {
-    margin: 8px 0;
-    padding-left: 20px;
-  }
-
-  .analysis-text li {
-    margin: 5px 0;
-    color: #cccccc;
-  }
-
-  .analysis-transcription p,
-  .analysis-summary p {
-    color: #cccccc;
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  .analysis-placeholder {
-    color: #888888;
-    font-style: italic;
-    padding: 10px;
-  }
-  
-  /* Sync Indicator */
-  .sync-indicator {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    background: rgba(0, 255, 136, 0.1);
-    border: 1px solid rgba(0, 255, 136, 0.3);
-    border-radius: 12px;
-    margin-bottom: 20px;
-  }
-  
-  .sync-dot {
-    width: 10px;
-    height: 10px;
-    background: #00ff88;
-    border-radius: 50%;
-    animation: syncPulse 2s ease-in-out infinite;
-  }
-  
-  @keyframes syncPulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.5;
-      transform: scale(1.2);
-    }
-  }
-  
-  .sync-text {
-    font-size: 0.95rem;
-    color: #00ff88;
-    font-weight: 700;
-  }
-  
-  .action-button {
-    margin-top: 40px;
-    text-align: center;
-  }
-  
-  .btn-analyze {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 18px 45px;
-    background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
-    color: #000000;
-    font-size: 1.2rem;
-    font-weight: 800;
-    text-decoration: none;
-    border-radius: 14px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 30px rgba(0, 255, 229, 0.4);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .btn-analyze::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s;
-  }
-  
-  .btn-analyze:hover::before {
-    left: 100%;
-  }
-  
-  .btn-analyze:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 40px rgba(0, 255, 229, 0.6);
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 1200px) {
-    .split-screen-container {
-      grid-template-columns: 1fr;
-      gap: 30px;
-    }
-    
-    .video-container {
-      height: 400px;
-    }
-    
-    .description-content {
-      max-height: 350px;
-    }
-  }
-  
-  @media (max-width: 768px) {
     main {
-      padding: 40px 15px;
+      min-height: 100vh;
+      padding: 60px 20px;
+      position: relative;
     }
-    
-    .video-container {
-      height: 300px;
+
+    /* Background decorations */
+    .bg-decoration {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
     }
-    
-    .video-header,
-    .description-header {
-      padding: 20px;
+
+    .bg-glow-1 {
+      top: 5%;
+      left: 5%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 255, 229, 0.15) 0%, transparent 70%);
+      filter: blur(80px);
     }
-    
-    .description-content {
-      font-size: 1.2rem;
-      padding: 25px 20px;
-      max-height: 300px;
+
+    .bg-glow-2 {
+      bottom: 5%;
+      right: 5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 184, 212, 0.12) 0%, transparent 70%);
+      filter: blur(70px);
     }
-    
-    .camera-info-banner {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 20px;
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
-    
+
     .page-header {
+      text-align: center;
+      margin-bottom: 60px;
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 15px;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .page-subtitle {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: #aaaaaa;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 255, 229, 0.3);
+      color: #00ffe5;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards 0.2s;
+    }
+
+    .back-button:hover {
+      background: rgba(0, 255, 229, 0.1);
+      border-color: #00ffe5;
+      transform: translateX(-5px);
+    }
+
+    .aisecure-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      opacity: 0;
+      animation: slideUp 1s ease forwards 0.4s;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .camera-info-banner {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 229, 0.2);
+      border-radius: 16px;
+      padding: 25px 35px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .camera-info-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .camera-info-icon {
+      font-size: 1.8rem;
+    }
+
+    .camera-info-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .camera-info-label {
+      font-size: 0.85rem;
+      color: #888888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .camera-info-value {
+      font-size: 1.1rem;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    /* Split Screen Layout */
+    .split-screen-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
       margin-bottom: 40px;
     }
-  }
-  
-  @media (max-width: 480px) {
-    .video-title,
-    .description-title {
+
+    /* Video Section */
+    .video-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid rgba(0, 255, 229, 0.3);
+      border-radius: 24px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 50px rgba(0, 255, 229, 0.2);
+      position: relative;
+    }
+
+    .video-section::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, rgba(0, 255, 229, 0.3), rgba(0, 184, 212, 0.3));
+      border-radius: 24px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .video-section:hover::before {
+      opacity: 1;
+    }
+
+    .video-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 25px 30px;
+      background: rgba(0, 255, 229, 0.05);
+      border-bottom: 2px solid rgba(0, 255, 229, 0.2);
+    }
+
+    .video-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .video-icon {
+      font-size: 2rem;
+    }
+
+    .video-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #00ffe5;
+      letter-spacing: -0.5px;
+    }
+
+    .timestamp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(0, 255, 229, 0.15);
+      border: 1px solid rgba(0, 255, 229, 0.3);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #00ffe5;
+    }
+
+    .video-container {
+      position: relative;
+      background: #000;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .camera-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    #ai-stream-loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      backdrop-filter: blur(5px);
+    }
+
+    .ai-scanning-line {
+      width: 100%;
+      height: 2px;
+      background: #00ffe5;
+      position: absolute;
+      top: 0;
+      box-shadow: 0 0 15px #00ffe5;
+      animation: scan 2s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
+
+
+    .no-video-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(0, 255, 229, 0.05) 0%, rgba(0, 184, 212, 0.05) 100%);
+      color: #666666;
+    }
+
+    .no-video-icon {
+      font-size: 5rem;
+      margin-bottom: 15px;
+      opacity: 0.3;
+    }
+
+    .no-video-text {
       font-size: 1.2rem;
+      font-weight: 600;
     }
-    
-    .description-content {
-      font-size: 1.1rem;
-      line-height: 1.7;
+
+    .video-controls {
+      padding: 20px 30px;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
     }
-    
-    .video-header,
+
+    /* Description Section */
+    .description-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid rgba(0, 255, 229, 0.3);
+      border-radius: 24px;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 50px rgba(0, 255, 229, 0.2);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .description-box::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, rgba(0, 255, 229, 0.3), rgba(0, 184, 212, 0.3));
+      border-radius: 24px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .description-box:hover::before {
+      opacity: 1;
+    }
+
     .description-header {
-      padding: 15px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 25px 30px;
+      background: rgba(0, 255, 229, 0.05);
+      border-bottom: 2px solid rgba(0, 255, 229, 0.2);
     }
-  }
-</style>
-</head>
-<body>
-  <!-- Background decorations -->
-  <div class="bg-decoration bg-glow-1"></div>
-  <div class="bg-decoration bg-glow-2"></div>
-  
-  <%- include("../partials/nav") %>
-  
-  <main>
-    <div class="container">
-      <a href="/cameras/<%= camera._id %>" class="back-button">
-        <span>←</span>
-        <span>Back to Camera Details</span>
-      </a>
-      
-      <div class="page-header">
-        <h1 class="page-title">AISecure Analysis</h1>
-        <p class="page-subtitle">Real-time synchronized video analysis</p>
-      </div>
-      
-      <div class="aisecure-container">
-        <!-- Camera Info Banner -->
-        <div class="camera-info-banner">
-          <div class="camera-info-item">
-            <span class="camera-info-icon">📹</span>
-            <div class="camera-info-text">
-              <span class="camera-info-label">Camera</span>
-              <span class="camera-info-value"><%= camera.cameraName %></span>
-            </div>
-          </div>
-          
-          <div class="camera-info-item">
-            <span class="camera-info-icon">📍</span>
-            <div class="camera-info-text">
-              <span class="camera-info-label">Location</span>
-              <span class="camera-info-value"><%= camera.location %></span>
-            </div>
-          </div>
-          
-          <div class="camera-info-item">
-            <span class="camera-info-icon">⚡</span>
-            <div class="camera-info-text">
-              <span class="camera-info-label">Status</span>
-              <span class="camera-info-value"><%= camera.status %></span>
-            </div>
-          </div>
+
+    .description-icon {
+      font-size: 2rem;
+    }
+
+    .description-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #00ffe5;
+      letter-spacing: -0.5px;
+    }
+
+    .description-content {
+      flex: 1;
+      font-size: 1.3rem;
+      line-height: 1.9;
+      color: #e0e0e0;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      padding: 35px 30px;
+      background: rgba(0, 255, 229, 0.02);
+      overflow-y: auto;
+      max-height: 500px;
+    }
+
+    .description-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .description-content::-webkit-scrollbar-track {
+      background: rgba(0, 255, 229, 0.05);
+      border-radius: 10px;
+    }
+
+    .description-content::-webkit-scrollbar-thumb {
+      background: rgba(0, 255, 229, 0.3);
+      border-radius: 10px;
+    }
+
+    .description-content::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 255, 229, 0.5);
+    }
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      gap: 25px;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(0, 255, 229, 0.2);
+      border-top: 4px solid #00ffe5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-text {
+      font-size: 1.3rem;
+      color: #00ffe5;
+      font-weight: 700;
+      text-align: center;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #888888;
+      font-size: 1.2rem;
+      font-weight: 500;
+      padding: 40px;
+    }
+
+    /* Timestamp Highlight */
+    .timestamp-highlight {
+      display: inline-block;
+      padding: 3px 10px;
+      background: rgba(0, 255, 229, 0.2);
+      border-radius: 6px;
+      color: #00ffe5;
+      font-weight: 700;
+      margin: 0 4px;
+    }
+
+    /* Control Center Buttons */
+    .control-btn {
+      padding: 14px 30px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      min-width: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-red-fade {
+      background: linear-gradient(135deg, #ff4444 0%, #b30000 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+      animation: buttonPulse 2.5s infinite;
+    }
+
+    .btn-red-fade:hover {
+      background: linear-gradient(135deg, #ff6666 0%, #cc0000 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 68, 68, 0.5);
+    }
+
+    .btn-teal-outline {
+      background: rgba(0, 255, 229, 0.05);
+      border: 2px solid #00ffe5 !important;
+      color: #00ffe5;
+    }
+
+    .btn-teal-outline:hover {
+      background: #00ffe5;
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 255, 229, 0.4);
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #888;
+    }
+
+    .btn-glass:hover {
+      background: rgba(255, 68, 68, 0.1);
+      color: #ff4444;
+      border-color: #ff4444 !important;
+    }
+
+    @keyframes buttonPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+    }
+
+    /* Analysis Cards */
+    .analysis-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 4px solid #ff4444;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .analysis-item.slow-completed {
+      border-left: 4px solid #00ffe5;
+      background: rgba(0, 255, 229, 0.05);
+    }
+
+    .analysis-item.processing {
+      border-left: 4px solid #ffaa00;
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+      0% { border-left-color: #ffaa00; }
+      50% { border-left-color: rgba(255, 170, 0, 0.2); }
+      100% { border-left-color: #ffaa00; }
+    }
+
+    .analysis-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .timestamp-highlight {
+      font-family: 'JetBrains Mono', monospace;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .analysis-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .insight-section {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .insight-label {
+      font-size: 0.8rem;
+      color: #00ffe5;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .insight-content {
+      font-size: 0.95rem;
+      color: #ccc;
+      line-height: 1.5;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    /* Processing Engine Pulse */
+    .processing-pulse {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 20px;
+      margin: 20px;
+      border: 1px dashed rgba(0, 255, 229, 0.2);
+    }
+
+    .pulse-ring {
+      width: 40px;
+      height: 40px;
+      background: #00ffe5;
+      border-radius: 50%;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0, 255, 229, 0.5);
+    }
+
+    .pulse-ring::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      border-radius: inherit;
+      animation: pulseGrow 2s infinite ease-out;
+    }
+
+    @keyframes pulseGrow {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .analysis-item.active {
+      background: rgba(0, 255, 229, 0.1);
+      border-color: rgba(0, 255, 229, 0.5);
+      box-shadow: 0 0 20px rgba(0, 255, 229, 0.3);
+    }
+
+    .analysis-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .analysis-badge {
+      padding: 4px 10px;
+      background: rgba(0, 255, 229, 0.15);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #00ffe5;
+    }
+
+    .analysis-body {
+      margin-top: 10px;
+    }
+
+    .analysis-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #00ffe5;
+      margin-bottom: 10px;
+    }
+
+    .analysis-text,
+    .analysis-transcription,
+    .analysis-summary {
+      margin-top: 15px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border-left: 3px solid rgba(0, 255, 229, 0.5);
+    }
+
+    .analysis-text strong,
+    .analysis-transcription strong,
+    .analysis-summary strong {
+      color: #00ffe5;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .analysis-text ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    .analysis-text li {
+      margin: 5px 0;
+      color: #cccccc;
+    }
+
+    .analysis-transcription p,
+    .analysis-summary p {
+      color: #cccccc;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .analysis-placeholder {
+      color: #888888;
+      font-style: italic;
+      padding: 10px;
+    }
+
+    /* Sync Indicator */
+    .sync-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sync-dot {
+      width: 10px;
+      height: 10px;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: syncPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes syncPulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+      }
+    }
+
+    .sync-text {
+      font-size: 0.95rem;
+      color: #00ff88;
+      font-weight: 700;
+    }
+
+    .action-button {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .btn-analyze {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 45px;
+      background: linear-gradient(135deg, #00ffe5 0%, #00b8d4 100%);
+      color: #000000;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: none;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 30px rgba(0, 255, 229, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-analyze::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-analyze:hover::before {
+      left: 100%;
+    }
+
+    .btn-analyze:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 40px rgba(0, 255, 229, 0.6);
+    }
+
+    .btn-analyze.analyzing {
+      background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+      box-shadow: 0 5px 30px rgba(255, 68, 68, 0.4);
+    }
+
+    .btn-analyze.analyzing:hover {
+      box-shadow: 0 8px 40px rgba(255, 68, 68, 0.6);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .split-screen-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .video-container {
+        height: 400px;
+      }
+
+      .description-content {
+        max-height: 350px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding: 40px 15px;
+      }
+
+      .video-container {
+        height: 300px;
+      }
+
+      .video-header,
+      .description-header {
+        padding: 20px;
+      }
+
+      .description-content {
+        font-size: 1.2rem;
+        padding: 25px 20px;
+        max-height: 300px;
+      }
+
+      .camera-info-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+      }
+
+      .page-header {
+        margin-bottom: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      .video-title,
+      .description-title {
+        font-size: 1.2rem;
+      }
+
+      .description-content {
+        font-size: 1.1rem;
+        line-height: 1.7;
+      }
+
+      .video-header,
+      .description-header {
+        padding: 15px;
+      }
+    }
+  </style>
+  </head>
+
+  <body>
+    <!-- Background decorations -->
+    <div class="bg-decoration bg-glow-1"></div>
+    <div class="bg-decoration bg-glow-2"></div>
+
+    <!-- 45s Deep Dive Startup Banner -->
+    <div id="startup-banner" style="
+      display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+      z-index: 9999; align-items: center; gap: 16px;
+      background: linear-gradient(135deg, rgba(0,30,30,0.97), rgba(0,20,20,0.97));
+      border: 1px solid rgba(0,255,229,0.4); border-radius: 16px;
+      padding: 18px 28px; box-shadow: 0 0 40px rgba(0,255,229,0.25), 0 8px 32px rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px); max-width: 480px; width: 90%;
+      transition: opacity 0.4s ease;">
+      <div style="width: 42px; height: 42px; border-radius: 50%; background: rgba(0,255,229,0.12);
+        border: 2px solid #00ffe5; display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem; flex-shrink: 0; animation: iconPulse 2s ease-in-out infinite;">⚙️</div>
+      <div style="flex: 1;">
+        <div style="color: #00ffe5; font-weight: 800; font-size: 0.95rem; letter-spacing: 1px; margin-bottom: 4px;">
+          DEEP DIVE AI STARTING UP
         </div>
-        
-        <!-- Sync Indicator -->
-        <div class="sync-indicator">
-          <div class="sync-dot"></div>
-          <span class="sync-text">Video and description are synchronized</span>
+        <div style="color: #aaa; font-size: 0.85rem;">
+          Whisper &amp; EasyOCR are loading models. First insight in
+          <span id="countdown-num" style="color: #00ffe5; font-weight: 700; font-size: 1rem;">45</span>s
         </div>
-        
-        <!-- Split Screen: Video & Description -->
-        <div class="split-screen-container">
-          <!-- Video Section -->
-          <div class="video-section">
-            <div class="video-header">
-              <div class="video-header-left">
-                <span class="video-icon">📹</span>
-                <h2 class="video-title">Live Footage</h2>
-              </div>
-              <div class="timestamp-badge">
-                <span>Time:</span>
-                <span id="current-time">00:00</span>
-              </div>
-            </div>
-            
-            <div class="video-container">
-              <% if (camera.videoUrl) { %>
-                <video 
-                  id="surveillance-video"
-                  src="<%= camera.videoUrl %>" 
-                  controls 
-                  class="camera-video"
-                ></video>
-              <% } else { %>
-                <div class="no-video-placeholder">
-                  <div class="no-video-icon">📹</div>
-                  <div class="no-video-text">No Video Available</div>
-                </div>
-              <% } %>
-            </div>
-          </div>
-          
-          <!-- Description Section -->
-          <div class="description-box">
-            <div class="description-header">
-              <span class="description-icon">🧠</span>
-              <h2 class="description-title">AI Analysis</h2>
-            </div>
-            
-            <div class="description-content" id="description-content">
-              <div class="loading-state" id="initial-loading">
-                <div class="loading-spinner"></div>
-                <p class="loading-text">Ready to analyze. Click "Start AI Analysis" to begin.</p>
-              </div>
-              <div id="analysis-results"></div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Action Button -->
-        <div class="action-button">
-          <button class="btn-analyze" id="analyze-btn">
-            <span>Start AI Analysis</span>
-          </button>
+        <div style="margin-top: 8px; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden;">
+          <div style="height: 100%; background: linear-gradient(90deg, #00ffe5, #00b8d4);
+            animation: progressSweep 45s linear forwards;" id="startup-progress"></div>
         </div>
       </div>
     </div>
-  </main>
-  
-  <script>
-    const cameraId = '<%= camera._id %>';
-    const video = document.getElementById('surveillance-video');
-    const currentTimeDisplay = document.getElementById('current-time');
-    const analyzeBtn = document.getElementById('analyze-btn');
-    const descriptionContent = document.getElementById('description-content');
-    const initialLoading = document.getElementById('initial-loading');
-    const analysisResults = document.getElementById('analysis-results');
-    const syncIndicator = document.querySelector('.sync-indicator');
-    
-    let analysisInterval = null;
-    let isAnalyzing = false;
-    let lastSlowChunkId = -1;
-
-    // Video timestamp updater
-    if (video && currentTimeDisplay) {
-      video.addEventListener('timeupdate', () => {
-        const minutes = Math.floor(video.currentTime / 60);
-        const seconds = Math.floor(video.currentTime % 60);
-        currentTimeDisplay.textContent = 
-          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        
-        // Highlight relevant analysis based on current video time
-        highlightCurrentAnalysis(video.currentTime);
-      });
-    }
-
-    // Format time helper
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    // Highlight analysis at current video time
-    function highlightCurrentAnalysis(currentTime) {
-      const analysisItems = document.querySelectorAll('.analysis-item');
-      analysisItems.forEach(item => {
-        const timestamp = parseFloat(item.dataset.timestamp);
-        const nextTimestamp = parseFloat(item.dataset.nextTimestamp || 999999);
-        
-        if (currentTime >= timestamp && currentTime < nextTimestamp) {
-          item.classList.add('active');
-        } else {
-          item.classList.remove('active');
-        }
-      });
-    }
-
-    // Display analysis results
-    function displayAnalysisResults(data) {
-      if (!data.slowResults || data.slowResults.length === 0) {
-        if (isAnalyzing && initialLoading) {
-          initialLoading.innerHTML = `
-            <div class="loading-spinner"></div>
-            <p class="loading-text">Processing chunks... ${data.completedSlowChunks || 0} completed</p>
-          `;
-        }
-        return;
+    <style>
+      @keyframes progressSweep { from { width: 0%; } to { width: 100%; } }
+      .suspicious-card { animation: suspiciousPulse 3s ease-in-out infinite; }
+      @keyframes suspiciousPulse {
+        0%, 100% { box-shadow: 0 0 0 rgba(255,60,60,0); }
+        50% { box-shadow: 0 0 18px rgba(255,60,60,0.25); }
       }
+    </style>
 
-      if (initialLoading) {
-        initialLoading.style.display = 'none';
-      }
+    <%- include("../partials/nav") %>
 
-      let html = '';
-      
-      // Sort by timestamp and add new results
-      const sortedResults = [...data.slowResults].sort((a, b) => a.timestamp - b.timestamp);
-      
-      sortedResults.forEach((result, index) => {
-        if (result.chunkId <= lastSlowChunkId) return;
-        
-        lastSlowChunkId = result.chunkId;
-        const nextTimestamp = index < sortedResults.length - 1 
-          ? sortedResults[index + 1].timestamp 
-          : null;
+      <main>
+        <div class="container">
+          <a href="/cameras/<%= camera._id %>" class="back-button">
+            <span>←</span>
+            <span>Back to Camera Details</span>
+          </a>
 
-        html += `
-          <div class="analysis-item" data-timestamp="${result.timestamp}" data-next-timestamp="${nextTimestamp || 999999}">
-            <div class="analysis-header">
-              <span class="timestamp-highlight">[${formatTime(result.timestamp)}]</span>
-              <span class="analysis-badge">Chunk ${result.chunkId}</span>
-            </div>
-            ${result.analysis ? `
-              <div class="analysis-body">
-                ${result.analysis.title ? `<h4 class="analysis-title">${result.analysis.title}</h4>` : ''}
-                ${result.analysis.textContent && result.analysis.textContent.length > 0 ? `
-                  <div class="analysis-text">
-                    <strong>Detected Text:</strong>
-                    <ul>
-                      ${result.analysis.textContent.map(text => `<li>${text}</li>`).join('')}
-                    </ul>
-                  </div>
-                ` : ''}
-                ${result.analysis.transcription ? `
-                  <div class="analysis-transcription">
-                    <strong>Audio Transcription:</strong>
-                    <p>${result.analysis.transcription}</p>
-                  </div>
-                ` : ''}
-                ${result.analysis.summary ? `
-                  <div class="analysis-summary">
-                    <strong>Summary:</strong>
-                    <p>${result.analysis.summary}</p>
-                  </div>
-                ` : ''}
-              </div>
-            ` : '<p class="analysis-placeholder">Analysis in progress...</p>'}
+          <div class="page-header">
+            <h1 class="page-title" style="background: linear-gradient(135deg, #ffaa00 0%, #ff4444 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">AI Security: 5-Minute Delay Alert Management</h1>
+            <p class="page-subtitle">Advanced asynchronous surveillance & threat detection system</p>
           </div>
-        `;
-      });
 
-      if (html) {
-        analysisResults.innerHTML += html;
-        analysisResults.scrollTop = analysisResults.scrollHeight;
-        
-        // Update sync indicator
-        if (syncIndicator) {
-          syncIndicator.querySelector('.sync-text').textContent = 
-            `Video and analysis synchronized - ${data.completedSlowChunks} chunks analyzed`;
-        }
-      }
-    }
+          <div class="aisecure-container">
+            <!-- Camera Info Banner -->
+            <div class="camera-info-banner">
+              <div class="camera-info-item">
+                <span class="camera-info-icon">📹</span>
+                <div class="camera-info-text">
+                  <span class="camera-info-label">Camera</span>
+                  <span class="camera-info-value">
+                    <%= camera.cameraName %>
+                  </span>
+                </div>
+              </div>
 
-    // Fetch analysis results with retry logic
-    async function fetchAnalysisResults(retryCount = 0) {
-      const MAX_RETRIES = 3;
-      
-      try {
-        const response = await fetch(`/api/analysis/camera/${cameraId}/results`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              <div class="camera-info-item">
+                <span class="camera-info-icon">📍</span>
+                <div class="camera-info-text">
+                  <span class="camera-info-label">Location</span>
+                  <span class="camera-info-value">
+                    <%= camera.location %>
+                  </span>
+                </div>
+              </div>
+
+              <div class="camera-info-item">
+                <span class="camera-info-icon">⚡</span>
+                <div class="camera-info-text">
+                  <span class="camera-info-label">Status</span>
+                  <span class="camera-info-value">
+                    <%= camera.status %>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sync Indicator -->
+            <div class="sync-indicator" style="background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.3);">
+              <div class="sync-dot" style="background: #ffaa00;"></div>
+              <span class="sync-text" style="color: #ffaa00;">System Status: Asynchronous Processing Active (Expected Delay: ~5 mins)</span>
+            </div>
+
+            <!-- Split Screen: Video & Description -->
+            <div class="split-screen-container">
+              <!-- Video Section -->
+              <div class="video-section">
+                <div class="video-header">
+                  <div class="video-header-left">
+                    <span class="video-icon">📹</span>
+                    <h2 class="video-title">Live Footage</h2>
+                  </div>
+                  <div class="timestamp-badge">
+                    <span>Time:</span>
+                    <span id="current-time">00:00</span>
+                  </div>
+                </div>
+
+                <div class="video-container">
+                  <% if (camera.videoUrl) { %>
+                    <video id="surveillance-video" src="<%= camera.videoUrl %>" controls class="camera-video"></video>
+                    <div id="ai-stream-loader">
+                      <div class="ai-scanning-line"></div>
+                      <div class="loading-spinner"></div>
+                      <p style="color: #00ffe5; margin-top: 15px; font-weight: 700; letter-spacing: 1px;">INITIALIZING AI ENGINE...</p>
+                    </div>
+                    <img id="ai-stream" src="" class="camera-video" style="display: none;">
+                    <% } else { %>
+                      <div class="no-video-placeholder">
+                        <div class="no-video-icon">📹</div>
+                        <div class="no-video-text">No Video Available</div>
+                      </div>
+                      <% } %>
+                </div>
+              </div>
+
+              <!-- Description Section -->
+              <div class="description-box">
+                <div class="description-header">
+                  <span class="description-icon">🧠</span>
+                  <h2 class="description-title">AI Analysis</h2>
+                </div>
+
+                <div class="description-content" id="description-content">
+                  <div class="loading-state" id="initial-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Ready to analyze. Click "Initialize Alert System" to begin.</p>
+                  </div>
+                  <div id="analysis-results"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="analysis-controls" style="display: flex; gap: 15px; align-items: center; justify-content: center; margin-top: 40px;">
+              <!-- INITIALIZE BUTTON -->
+              <button id="initialize-btn" class="control-btn btn-red-fade">
+                Initialize Alert System
+              </button>
+              
+              <!-- DEEP DIVE BUTTON -->
+              <button id="deep-dive-btn" class="control-btn btn-teal-outline" style="display: none;">
+                Launch Deep Dive AI
+              </button>
+
+              <!-- STOP BUTTON -->
+              <button id="stop-btn" class="control-btn btn-glass" style="display: none;">
+                Terminate System
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <script>
+        const cameraId = '<%= camera._id %>';
+        const video = document.getElementById('surveillance-video');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const descriptionContent = document.getElementById('description-content');
+        const initialLoading = document.getElementById('initial-loading');
+        const analysisResults = document.getElementById('analysis-results');
+
+        let analysisInterval = null;
+        let isAnalyzing = false;
+        let countdownTimer = null;
+        let countdownSeconds = 45;
+
+        // 45-second Startup Countdown Banner
+        function startCountdown() {
+          countdownSeconds = 45;
+          const banner = document.getElementById('startup-banner');
+          const countEl = document.getElementById('countdown-num');
+          if (banner) {
+            banner.style.display = 'flex';
+            banner.style.opacity = '1';
+          }
+          if (countEl) countEl.textContent = countdownSeconds;
+          
+          if (countdownTimer) clearInterval(countdownTimer);
+          countdownTimer = setInterval(() => {
+            countdownSeconds--;
+            if (countEl) countEl.textContent = countdownSeconds;
+            if (countdownSeconds <= 0) {
+              clearInterval(countdownTimer);
+              countdownTimer = null;
+            }
+          }, 1000);
         }
-        
-        const data = await response.json();
-        
-        if (!data.success) {
-          throw new Error(data.error || 'Failed to fetch analysis results');
+
+        function dismissCountdown() {
+          if (countdownTimer) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+          }
+          const banner = document.getElementById('startup-banner');
+          if (banner && banner.style.display !== 'none') {
+            banner.style.opacity = '0';
+            setTimeout(() => {
+              banner.style.display = 'none';
+            }, 400);
+          }
         }
-        
-        displayAnalysisResults(data);
-        
-        // Reset retry count on success
-        retryCount = 0;
-        
-        // Check if analysis is complete
-        try {
-          const statusResponse = await fetch(`/api/analysis/camera/${cameraId}/status`);
-          if (statusResponse.ok) {
-            const statusData = await statusResponse.json();
+
+        if (video && currentTimeDisplay) {
+          video.addEventListener('timeupdate', () => {
+            const minutes = Math.floor(video.currentTime / 60);
+            const seconds = Math.floor(video.currentTime % 60);
+            currentTimeDisplay.textContent =
+              `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            highlightCurrentAnalysis(video.currentTime);
+          });
+        }
+
+        function formatTime(seconds) {
+          const mins = Math.floor(seconds / 60);
+          const secs = Math.floor(seconds % 60);
+          return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function highlightCurrentAnalysis(currentTime) {
+          const analysisItems = document.querySelectorAll('.analysis-item');
+          analysisItems.forEach(item => {
+            const timestamp = parseFloat(item.dataset.timestamp);
+            const nextItem = item.nextElementSibling;
+            const nextTimestamp = nextItem ? parseFloat(nextItem.dataset.timestamp) : Infinity;
+            if (currentTime >= timestamp && currentTime < nextTimestamp) {
+              item.classList.add('active');
+            } else {
+              item.classList.remove('active');
+            }
+          });
+        }
+
+        function displayAnalysisResults(data) {
+          if (!analysisResults) return;
+          const unifiedData = {};
+          const fastDetectionMap = {};
+
+          if (data.fastResults) {
+            data.fastResults.forEach(r => {
+              const slowChunkId = Math.floor(r.chunkId / 6);
+              if (!fastDetectionMap[slowChunkId]) {
+                fastDetectionMap[slowChunkId] = { hasPerson: false, objects: [] };
+              }
+              if (r.personDetected) fastDetectionMap[slowChunkId].hasPerson = true;
+              if (r.objectsTracked) {
+                r.objectsTracked.forEach(obj => {
+                  const exists = fastDetectionMap[slowChunkId].objects.some(o => o.label === obj.label);
+                  if (!exists) fastDetectionMap[slowChunkId].objects.push(obj);
+                });
+              }
+            });
+          }
+
+          if (data.slowResults) {
+            data.slowResults.forEach(r => {
+              const fastData = fastDetectionMap[r.chunkId] || { hasPerson: false, objects: [] };
+              unifiedData[r.chunkId] = {
+                timestamp: r.timestamp,
+                slowData: r.analysis,
+                groqVerdict: r.groqVerdict || { isSuspicious: false, reason: '' },
+                status: r.status,
+                hasPerson: fastData.hasPerson,
+                objectsTracked: fastData.objects
+              };
+            });
+          }
+
+          const sortedChunks = Object.keys(unifiedData).sort((a, b) => b - a);
+          if (sortedChunks.some(id => unifiedData[id].status === 'completed')) dismissCountdown();
+
+          let html = '';
+          sortedChunks.forEach(chunkId => {
+            const item = unifiedData[chunkId];
+            const isCompleted = item.status === 'completed';
+            const verdict = item.groqVerdict;
+            const isSuspicious = isCompleted && verdict.isSuspicious;
+
+            const isError = isCompleted && (verdict.reason.startsWith('API Error') || verdict.reason.startsWith('AI Error') || verdict.reason.startsWith('AI check failed'));
             
-            if (statusData.success && statusData.isComplete) {
-              stopPolling();
-              if (analyzeBtn) {
-                analyzeBtn.textContent = 'Analysis Complete';
-                analyzeBtn.disabled = true;
-              }
-              if (initialLoading) {
-                initialLoading.style.display = 'none';
-              }
-              if (syncIndicator) {
-                syncIndicator.querySelector('.sync-text').textContent = 
-                  `Analysis complete - ${statusData.completedSlowChunks} chunks analyzed`;
+            let verdictBadge = '';
+            if (isCompleted) {
+              if (isError) {
+                verdictBadge = `
+                  <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;
+                    font-size:0.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+                    background:rgba(255,170,0,0.12); color:#ffaa00; border:1px solid rgba(255,170,0,0.4)">
+                    ⚠️ AI ERROR
+                  </span>`;
+              } else {
+                verdictBadge = `
+                  <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;
+                    font-size:0.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+                    background:${isSuspicious ? 'rgba(255,60,60,0.18)' : 'rgba(0,255,136,0.12)'};
+                    color:${isSuspicious ? '#ff4444' : '#00ff88'};
+                    border:1px solid ${isSuspicious ? 'rgba(255,60,60,0.4)' : 'rgba(0,255,136,0.3)'}">
+                    ${isSuspicious ? '🔴 SUSPICIOUS' : '🟢 CLEAR'}
+                  </span>`;
               }
             }
-          }
-        } catch (statusError) {
-          logger.warn('Failed to fetch status, continuing...', statusError);
-        }
-        
-      } catch (error) {
-        console.error('Error fetching analysis results:', error);
-        
-        if (retryCount < MAX_RETRIES) {
-          console.log(`Retrying... (${retryCount + 1}/${MAX_RETRIES})`);
-          await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1)));
-          return fetchAnalysisResults(retryCount + 1);
-        } else {
-          if (initialLoading) {
-            initialLoading.innerHTML = `
-              <div class="error-state">
-                <p class="error-text">Failed to fetch analysis results. Please refresh the page.</p>
+
+            html += `
+              <div class="analysis-item ${isCompleted ? (isSuspicious ? 'slow-completed suspicious-card' : 'slow-completed') : 'processing'}"
+                data-timestamp="${item.timestamp}"
+                style="${isSuspicious ? 'border-left:3px solid #ff4444;background:rgba(255,60,60,0.04);' : ''}">
+                <div class="analysis-header">
+                  <span class="timestamp-highlight">[${formatTime(item.timestamp)}]</span>
+                  <span class="analysis-badge" style="background:${isCompleted ? 'rgba(0,255,229,0.2)' : 'rgba(255, 170, 0, 0.2)'};color:${isCompleted ? '#00ffe5' : '#ffaa00'}">
+                    ${isCompleted ? 'Deep Insight' : 'Analyzing Segment...'}
+                  </span>
+                  ${verdictBadge}
+                </div>
+                ${isCompleted ? `
+                  <div class="insight-content" style="padding: 10px 0;">
+                    <!-- Primary Status Header -->
+                    <div style="color: #00ffe5; font-weight: 800; margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 10px; justify-content: space-between;">
+                       <div style="display: flex; align-items: center; gap: 10px;">
+                         <span style="font-size: 1.4rem;">${item.hasPerson ? '🚨' : '🛡️'}</span> 
+                         <div style="display: flex; flex-direction: column;">
+                           <span style="line-height: 1.2;">${item.hasPerson ? 'HUMAN ACTIVITY DETECTED' : 'SYSTEM SECURE'}</span>
+                           <span style="font-size: 0.75rem; color: #888; font-weight: 400; text-transform: none;">
+                              ${item.slowData.title || 'UNIDENTIFIED SEGMENT'}
+                           </span>
+                         </div>
+                       </div>
+                       
+                       <!-- NEW: Digital Camera Clock -->
+                       <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(0,255,229,0.3); padding: 4px 10px; border-radius: 6px; font-family: 'Courier New', monospace; box-shadow: 0 0 10px rgba(0,255,229,0.15);">
+                         <div style="color: #00ffe5; font-size: 0.85rem; font-weight: 900; letter-spacing: 1px;">
+                           ${item.slowData.cameraTime || '00:00:00'}
+                         </div>
+                       </div>
+                    </div>
+
+                    <!-- Analysis Modules -->
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px;">
+                      
+                      <!-- Visual Module -->
+                      ${item.slowData.visual_action && !item.slowData.visual_action.includes('unavailable') ? `
+                        <div style="padding: 12px; border-radius: 12px; background: rgba(0,255,180,0.06); border: 1px solid rgba(0,255,180,0.15);">
+                          <div style="color: #00ffb4; font-size: 0.7rem; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px;">
+                            👁️ VISUAL BEHAVIOR ANALYSIS
+                          </div>
+                          <div style="color: #e0e0e0; font-size: 0.95rem; line-height: 1.5; font-weight: 500;">
+                            "${item.slowData.visual_action}"
+                          </div>
+                        </div>
+                      ` : ''}
+
+                      <!-- Audio Module -->
+                      ${item.slowData.transcription ? `
+                        <div style="padding: 12px; border-radius: 12px; background: rgba(0,180,255,0.06); border: 1px solid rgba(0,180,255,0.15);">
+                          <div style="color: #00b4ff; font-size: 0.7rem; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px;">
+                            🎙️ AUDIO TRANSCRIPTION
+                          </div>
+                          <div style="color: #e0e0e0; font-size: 0.95rem; line-height: 1.5; font-style: italic;">
+                            "${item.slowData.transcription}"
+                          </div>
+                        </div>
+                      ` : ''}
+
+                      <!-- Environment Module -->
+                      <div style="padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);">
+                        <div style="color: #aaa; font-size: 0.7rem; font-weight: 900; margin-bottom: 6px; letter-spacing: 1px;">
+                          🗺️ SCENE COMPONENTS
+                        </div>
+                        <div style="color: #bbb; font-size: 0.88rem;">
+                          ${item.objectsTracked && item.objectsTracked.length > 0 
+                            ? item.objectsTracked.map(o => o.label.toUpperCase()).join(', ') 
+                            : (item.slowData.summary.split(' | ').find(s => s.includes('View'))?.split(': ')[1] || 'Scanning components...')}
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Final AI Verdict Banner -->
+                    ${isSuspicious ? `
+                      <div style="padding:12px 16px; border-radius:12px; background:rgba(255,60,60,0.12); border: 1px solid rgba(255,60,60,0.3); border-left: 4px solid #ff4444;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                          <div style="color:#ff6666; font-size:0.75rem; font-weight:900; letter-spacing: 1px;">AI SECURITY VERDICT</div>
+                          <div style="color: #fff; background: #ff4444; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 900;">${item.slowData.severity || 'CRITICAL'}</div>
+                        </div>
+                        <div style="color:#ffaaaa; font-size:0.95rem; font-weight:700;">${verdict.reason}</div>
+                      </div>
+                    ` : `
+                      <div style="padding:10px 16px; border-radius:12px; background:rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); border-left: 4px solid #00ff88;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                          <div style="color:#00ff88; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+                            <span>🛡️</span> ${verdict.reason || 'Segment verified and marked as secure.'}
+                          </div>
+                          <div style="color: #000; background: #00ff88; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 900;">SECURE</div>
+                        </div>
+                      </div>
+                    `}
+                  </div>
+                ` : `
+                  <div style="display: flex; align-items: center; gap: 10px; color: #888; font-style: italic; padding: 10px;">
+                    <div class="loading-spinner" style="width:16px; height:16px; border-width:2px;"></div>
+                    <span>Processing audio & visuals...</span>
+                  </div>
+                `}
               </div>
             `;
-          }
-        }
-      }
-    }
-
-    // Start polling for results
-    function startPolling() {
-      if (analysisInterval) return;
-      
-      analysisInterval = setInterval(fetchAnalysisResults, 2000);
-      fetchAnalysisResults();
-    }
-
-    // Stop polling
-    function stopPolling() {
-      if (analysisInterval) {
-        clearInterval(analysisInterval);
-        analysisInterval = null;
-      }
-    }
-
-    // Analyze button handler
-    if (analyzeBtn) {
-      analyzeBtn.addEventListener('click', async () => {
-        if (isAnalyzing) {
-          stopPolling();
-          isAnalyzing = false;
-          analyzeBtn.textContent = 'Start AI Analysis';
-          analyzeBtn.disabled = false;
-          return;
-        }
-
-        try {
-          isAnalyzing = true;
-          analyzeBtn.textContent = 'Starting Analysis...';
-          analyzeBtn.disabled = true;
-
-          const response = await fetch(`/api/analysis/camera/${cameraId}/start`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
           });
 
-          const data = await response.json();
-
-          if (data.success) {
-            analyzeBtn.textContent = 'Analysis Running...';
-            analyzeBtn.disabled = false;
-            lastSlowChunkId = -1;
-            analysisResults.innerHTML = '';
-            if (initialLoading) {
-              initialLoading.innerHTML = `
-                <div class="loading-spinner"></div>
-                <p class="loading-text">Analyzing video feed with AI...</p>
-              `;
-              initialLoading.style.display = 'block';
-            }
-            startPolling();
-          } else {
-            showError('Failed to start analysis: ' + (data.error || 'Unknown error'));
-            isAnalyzing = false;
-            analyzeBtn.textContent = 'Start AI Analysis';
-            analyzeBtn.disabled = false;
-          }
-        } catch (error) {
-          console.error('Error starting analysis:', error);
-          showError('Failed to start analysis. Please check your connection and try again.');
-          isAnalyzing = false;
-          analyzeBtn.textContent = 'Start AI Analysis';
-          analyzeBtn.disabled = false;
+          analysisResults.innerHTML = html || `
+            <div class="processing-pulse">
+              <div class="pulse-ring"></div>
+              <p style="margin-top: 15px; color: #00ffe5; font-weight: 700;">
+                ${isAnalyzing ? 'DEEP DIVE ENGINE: ACTIVE' : 'WAITING FOR INITIALIZATION'}
+              </p>
+            </div>
+          `;
+          if (initialLoading && html) initialLoading.style.display = 'none';
         }
-      });
-    }
 
-    // Show error message to user
-    function showError(message) {
-      const errorDiv = document.createElement('div');
-      errorDiv.className = 'error-notification';
-      errorDiv.textContent = message;
-      errorDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #ef4444;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 10000;
-        max-width: 400px;
-      `;
-      document.body.appendChild(errorDiv);
-      
-      setTimeout(() => {
-        errorDiv.style.opacity = '0';
-        errorDiv.style.transition = 'opacity 0.3s';
-        setTimeout(() => errorDiv.remove(), 300);
-      }, 5000);
-    }
+        async function fetchAnalysisResults() {
+          try {
+            const response = await fetch('/api/analysis/camera/' + cameraId + '/results');
+            const data = await response.json();
+            if (data.success) {
+              if (!isAnalyzing && data.slowResults?.length > 0) {
+                const working = data.slowResults.some(r => r.status === 'processing' || r.status === 'initializing_ai');
+                if (working) {
+                  isAnalyzing = true;
+                  const btn = document.getElementById('deep-dive-btn');
+                  if (btn) {
+                    btn.classList.add('active');
+                    btn.innerHTML = '<span>DEEP DIVE ACTIVE</span>';
+                  }
+                }
+              }
+              displayAnalysisResults(data);
+            }
+          } catch (e) {
+            console.error('Polling error:', e);
+          }
+        }
 
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', () => {
-      stopPolling();
-    });
+        function startPolling() {
+          if (analysisInterval) return;
+          analysisInterval = setInterval(fetchAnalysisResults, 2500);
+          fetchAnalysisResults();
+        }
 
-    // Handle video errors
-    if (video) {
-      video.addEventListener('error', (e) => {
-        console.error('Video error:', e);
-        showError('Error loading video. Please check if the video URL is valid.');
-      });
+        function stopPolling() {
+          if (analysisInterval) {
+            clearInterval(analysisInterval);
+            analysisInterval = null;
+          }
+        }
 
-      video.addEventListener('loadeddata', () => {
-        console.log('Video loaded successfully');
-      });
-    }
-  </script>
-</body>
+        const initializeBtn = document.getElementById('initialize-btn');
+        const deepDiveBtn = document.getElementById('deep-dive-btn');
+        const stopBtn = document.getElementById('stop-btn');
+
+        if (initializeBtn) {
+          initializeBtn.addEventListener('click', () => {
+            const aiStream = document.getElementById('ai-stream');
+            const aiLoader = document.getElementById('ai-stream-loader');
+            const videoPlayer = document.getElementById('surveillance-video');
+            isAnalyzing = true;
+            initializeBtn.style.display = 'none';
+            if (deepDiveBtn) deepDiveBtn.style.display = 'flex';
+            if (stopBtn) stopBtn.style.display = 'flex';
+            if (aiStream && videoPlayer) {
+              videoPlayer.style.display = 'none';
+              if (aiLoader) aiLoader.style.display = 'flex';
+              aiStream.src = '/api/analysis/camera/' + cameraId + '/stream?t=' + Date.now();
+              aiStream.onload = () => {
+                if (aiLoader) aiLoader.style.display = 'none';
+                aiStream.style.display = 'block';
+              };
+            }
+          });
+        }
+
+        if (stopBtn) {
+          stopBtn.addEventListener('click', () => {
+            const aiStream = document.getElementById('ai-stream');
+            const videoPlayer = document.getElementById('surveillance-video');
+            isAnalyzing = false;
+            stopPolling();
+            dismissCountdown();
+            initializeBtn.style.display = 'flex';
+            if (deepDiveBtn) deepDiveBtn.style.display = 'none';
+            if (stopBtn) stopBtn.style.display = 'none';
+            if (aiStream && videoPlayer) {
+              aiStream.style.display = 'none';
+              aiStream.src = '';
+              videoPlayer.style.display = '';
+            }
+          });
+        }
+
+        if (deepDiveBtn) {
+          deepDiveBtn.addEventListener('click', async () => {
+            deepDiveBtn.disabled = true;
+            deepDiveBtn.textContent = 'Deep Dive Launched';
+            startCountdown();
+            try {
+              const res = await fetch('/api/analysis/camera/' + cameraId + '/start', { method: 'POST' });
+              const data = await res.json();
+              if (data.success) startPolling();
+              else {
+                dismissCountdown();
+                alert('Error: ' + data.error);
+                deepDiveBtn.disabled = false;
+                deepDiveBtn.textContent = 'Launch Deep Dive AI';
+              }
+            } catch (e) {
+              dismissCountdown();
+              deepDiveBtn.disabled = false;
+              deepDiveBtn.textContent = 'Launch Deep Dive AI';
+            }
+          });
+        }
+
+        window.addEventListener('beforeunload', stopPolling);
+      </script>
+  </body>
 </html>
