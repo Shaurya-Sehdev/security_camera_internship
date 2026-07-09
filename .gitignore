@@ -95,3 +95,5 @@ public/videos/slow_temp_chunks/
 
 # Local demo videos (outside public/ — not part of the served app)
 /videos/
+prompt.txt
+redis_config.txt
