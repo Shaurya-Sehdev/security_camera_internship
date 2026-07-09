@@ -1,16 +1,44 @@
-# Security Camera System
+# AI Security Camera System
 
-A security camera management platform with AI-powered video analysis. Built with Node.js, Express, MongoDB, and Redis.
+A real-time security camera monitoring interface with AI-powered video analysis. The platform combines a web dashboard for camera management with automated object detection, OCR, and audio transcription pipelines for intelligent surveillance.
 
-## Getting Started
+Built during an internship at **SoCTeamup Semiconductors Pvt Ltd** (Noida-based semiconductor and chip-design startup) as an **ML & Web Developer Intern** (Jul 2025 – Nov 2025).
 
-You'll need these installed first:
+## Tech Stack
 
-- Node.js (v16+)
+**Backend & Web**
+- Node.js, Express, EJS
+- MongoDB (Mongoose), Redis, BullMQ
+- Passport-style session auth with bcrypt password hashing
+
+**AI / ML**
+- Python, Ultralytics YOLO (object detection)
+- EasyOCR, OpenAI Whisper (text and audio analysis)
+- FFmpeg for video chunking and processing
+
+**Infrastructure**
+- Docker Compose (Redis)
+- Concurrent worker architecture (fast + slow queues)
+
+## Key Features
+
+- Live camera dashboard with browse, filter, and feed viewing
+- Camera registration and host management
+- User authentication, favourites, and role-based access
+- Fast worker: YOLO-based object detection on video chunks
+- Slow worker: OCR and audio transcription for deeper analysis
+- AI bridge for real-time inference coordination
+- REST API architecture with queued background processing
+
+## Prerequisites
+
+- Node.js (v16+, v18 recommended)
 - MongoDB
 - Redis
-- Python (3.8+)
+- Python 3.8+ (3.10+ recommended for ML workers)
 - FFmpeg
+
+## Setup
 
 Install Node dependencies:
 
@@ -18,89 +46,84 @@ Install Node dependencies:
 npm install
 ```
 
-Install Python packages:
+Install Python packages (minimum set):
 
 ```bash
-pip install ultralytics opencv-python paddleocr openai-whisper pymongo numpy
+pip install ultralytics opencv-python easyocr openai-whisper pymongo numpy
 ```
 
-Create a `.env` file in the root directory:
+Or use the full pinned list:
 
+```bash
+pip install -r requirements.txt
 ```
+
+Create a `.env` file in the project root (see `.env.example`):
+
+```env
 MONGO_URL=mongodb://localhost:27017/security_camera
 SESSION_SECRET=your-secret-key-here
 PORT=3000
 NODE_ENV=development
 PYTHON_PATH=python
+REDIS_HOST=localhost
+REDIS_PORT=6379
 ```
 
-Make sure MongoDB and Redis are running, then start the app:
+Start Redis (local install or Docker):
+
+```bash
+npm run docker:redis
+```
+
+Make sure MongoDB and Redis are running, then start the full stack:
 
 ```bash
 npm run dev
 ```
 
-This starts the main server and both workers. Open http://localhost:3000 in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Running Separately
+## Running Components Separately
 
-If you want to run things separately for debugging:
-
-Terminal 1:
+For debugging, run each part in its own terminal:
 
 ```bash
+# Terminal 1 — web server
 npm start
-```
 
-Terminal 2:
-
-```bash
+# Terminal 2 — fast YOLO worker
 npm run fast_worker
-```
 
-Terminal 3:
-
-```bash
+# Terminal 3 — slow OCR / transcription worker
 npm run slow_worker
 ```
 
 ## How It Works
 
-The system has three main parts:
-
-- Express server handles web requests and serves pages
-- Fast worker does quick YOLO object detection on videos
-- Slow worker does OCR and audio transcription for detailed analysis
-
-Videos get split into chunks, analyzed, and results are stored in MongoDB. Redis queues the work between workers.
-
-## Troubleshooting
-
-If the server won't start, check:
-
-- MongoDB is running (test with `mongod --version`)
-- Redis is running (test with `redis-cli ping`)
-- Your `.env` file exists and has correct values
-- Port 3000 isn't already in use
-
-If workers aren't processing:
-
-- Make sure both workers are running
-- Check Redis connection
-- Verify MongoDB connection string in `.env`
-
-For Python errors, make sure all packages are installed and test with:
-
-```bash
-python -c "from ultralytics import YOLO; print('OK')"
-```
+1. The Express server handles web requests, authentication, and camera CRUD.
+2. Uploaded or linked videos are split into chunks via FFmpeg.
+3. The **fast worker** runs YOLO detection on chunks through the Python AI bridge.
+4. The **slow worker** performs OCR and Whisper transcription for detailed analysis.
+5. Results are stored in MongoDB; Redis (BullMQ) queues jobs between Node and Python.
 
 ## Environment Variables
 
-- `MONGO_URL` - MongoDB connection string
-- `SESSION_SECRET` - Secret key for sessions (use a random string)
-- `PORT` - Server port (default 3000)
-- `NODE_ENV` - Set to `development` or `production`
-- `PYTHON_PATH` - Python command (`python` or `python3`)
+| Variable | Description |
+|---|---|
+| `MONGO_URL` | MongoDB connection string |
+| `SESSION_SECRET` | Secret key for express sessions |
+| `PORT` | Server port (default `3000`) |
+| `NODE_ENV` | `development` or `production` |
+| `PYTHON_PATH` | Python executable (`python` or `python3`) |
+| `REDIS_HOST` | Redis host (default `localhost`) |
+| `REDIS_PORT` | Redis port (default `6379`) |
 
-Don't commit your `.env` file to git.
+Do not commit your `.env` file to version control.
+
+## Troubleshooting
+
+- **Server won't start** — verify MongoDB and Redis are running; check `.env` values and that port 3000 is free.
+- **Workers idle** — confirm both workers are running and Redis is reachable.
+- **Python import errors** — reinstall requirements and test with `python -c "from ultralytics import YOLO; print('OK')"`.
+- **First ML run is slow** — model weights are downloaded on first use; restart workers after caching completes.

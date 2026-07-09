@@ -1,0 +1,40 @@
+# Security Camera System — Python dependencies (Python 3.11)
+#
+# Pip-only setup (no conda):
+#   python -m venv .venv && source .venv/bin/activate
+#   pip install -r requirements.txt
+#
+# PyTorch with GPU: install wheels for YOUR CUDA version from https://pytorch.org
+# Example (adjust cu128 to match your setup):
+#   pip install torch==2.10.0 torchvision==0.25.0 --index-url https://download.pytorch.org/whl/cu128
+#
+# FFmpeg is required for video chunking but is called by Node.js (utils/ffmpeg.js),
+# not imported in Python. Install separately:
+#   conda install -c conda-forge ffmpeg
+#   sudo apt install ffmpeg
+#
+# TensorRT / ONNX Runtime / PyTorchVideo are NOT imported by this project.
+# Install manually from NVIDIA only if you add that integration yourself.
+
+# --- Core ML (directly imported) ---
+torch==2.10.0
+torchvision==0.25.0
+numpy==2.3.5
+opencv-python==4.13.0.92
+pillow==10.4.0
+
+# --- Detection, OCR, audio, VLM ---
+ultralytics==8.4.18
+easyocr==1.7.2
+openai-whisper==20250625
+transformers==4.43.3
+
+# --- Database (slide_processor.py) ---
+pymongo==4.16.0
+dnspython==2.8.0
+
+# --- Test utility (test_pipeline.py only) ---
+requests==2.32.5
+
+# YOLO-World models (yolov8s-worldv2.pt) may require CLIP — install if needed:
+# pip install git+https://github.com/ultralytics/CLIP.git

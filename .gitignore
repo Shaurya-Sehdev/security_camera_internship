@@ -1,57 +1,97 @@
-# Dependencies
-node_modules/
-package-lock.json
-
-# Environment variables
+# ===========================================
+# Environment & secrets
+# ===========================================
 .env
+.env.*
+!.env.example
 .env.local
 .env.*.local
 
-# Logs
-logs/
-*.log
+# Local connection strings / credentials (use .env instead)
+link.txt
+
+# ===========================================
+# Node.js
+# ===========================================
+node_modules/
+package-lock.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# OS files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Build outputs
-dist/
-build/
-*.map
-
-# Temporary files
-*.tmp
-*.temp
-temp/
-tmp/
-
-# Video chunks (can be regenerated)
-public/videos/*_temp_chunks/
-public/videos/fast_temp_chunks/
-public/videos/slow_temp_chunks/
-
+# ===========================================
 # Python
+# ===========================================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
 venv/
+.venv/
 env/
 ENV/
+.pytest_cache/
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
 
-# YOLO model (if not committed)
+# ===========================================
+# ML model weights (large / private)
+# ===========================================
 *.pt
+*.pth
+*.onnx
+*.h5
+*.weights
+*.pb
 
+# YOLO / training run artifacts
+runs/
+
+# ===========================================
+# Logs & cache
+# ===========================================
+logs/
+*.log
+*.tmp
+*.temp
+temp/
+tmp/
+.cache/
+*.optimized_records.json
+
+# ===========================================
+# Build output
+# ===========================================
+dist/
+build/
+*.map
+
+# ===========================================
+# IDE & editor
+# ===========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ===========================================
+# OS files
+# ===========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================================
+# Project-specific generated / local media
+# ===========================================
+# Regenerable video chunk directories
+public/videos/*_temp_chunks/
+public/videos/fast_temp_chunks/
+public/videos/slow_temp_chunks/
+
+# Local demo videos (outside public/ — not part of the served app)
+/videos/
