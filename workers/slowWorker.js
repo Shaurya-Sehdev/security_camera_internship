@@ -8,7 +8,8 @@ const checkRedis = require("../utils/redisCheck");
 const { connectMongoDB, closeMongoDB } = require("../utils/mongodb");
 const logger = require("../utils/logger");
 
-const PYTHON_PATH = process.env.PYTHON_PATH || "python";
+const { getPythonPath } = require("../utils/envUtil");
+const PYTHON_PATH = getPythonPath();
 const SLOW_CHUNK_TIME = 6;
 
 const slowWorker = new Worker(
