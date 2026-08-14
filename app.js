@@ -84,25 +84,20 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-// Start server with MongoDB connection
-async function startServer() {
-  try {
-    await connectMongoDB({ workerName: "Main App" });
-    
-    app.listen(PORT, "0.0.0.0", () => {
-      logger.success(`Server running at http://0.0.0.0:${PORT}`);
-      logger.info(`Environment: ${process.env.NODE_ENV || "development"}`);
-    });
-  } catch (err) {
-    logger.error("Failed to start server", err);
-    process.exit(1);
-  }
-}
+const server = app.listen(PORT, "0.0.0.0", () => {
+  logger.success(`Server running at http://0.0.0.0:${PORT}`);
+  logger.info(`Environment: ${process.env.NODE_ENV || "development"}`);
+});
+server.keepAliveTimeout = 120000;
+server.headersTimeout = 120000;
+
+// Connect to MongoDB asynchronously after HTTP server is bound
+connectMongoDB({ workerName: "Main App" }).catch((err) => {
+  logger.error("Failed to connect MongoDB", err);
+});
 
 // Start background video normalization engine
 require("./utils/videoOptimizer").startOptimizer();
-
-startServer();
 
 const shutdown = async () => {
   logger.info("Shutting down gracefully...");
