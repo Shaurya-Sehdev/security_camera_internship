@@ -1,24 +1,28 @@
-# AI Security Camera System
+# 📹 AI Security Camera & Threat Analysis System
 
-A real-time security camera monitoring interface with AI-powered video analysis. The platform combines a web dashboard for camera management with automated object detection, OCR, and audio transcription pipelines for intelligent surveillance.
+> 🌐 **Live Web Application:** [https://security-camera-internship.onrender.com](https://security-camera-internship.onrender.com)  
+> 🎥 **Demo Video:** Included in repository as `demo_presentation.mp4`
 
-Built during an internship at **SoCTeamup Semiconductors Pvt Ltd** (Noida-based semiconductor and chip-design startup) as an **ML & Web Developer Intern** (Jul 2025 – Nov 2025).
+A real-time security camera monitoring platform with AI-powered video analysis. The platform combines a responsive web dashboard for surveillance management with automated object detection (YOLOv8-World), OCR, speech transcription (OpenAI Whisper), and reasoning LLMs (**Groq `gpt-oss-20b`**) for threat detection and automated email alerts.
+
+Built during an internship at **SoCTeamup Semiconductors Pvt Ltd** (Noida-based semiconductor and chip-design startup) as an **ML & Web Developer Intern**.
 
 ## Tech Stack
 
-**Backend & Web**
+**Backend & Web Interface**
 - Node.js, Express, EJS
-- MongoDB (Mongoose), Redis, BullMQ
+- MongoDB Atlas, Redis, BullMQ
 - Passport-style session auth with bcrypt password hashing
 
-**AI / ML**
-- Python, Ultralytics YOLO (object detection)
-- EasyOCR, OpenAI Whisper (text and audio analysis)
-- FFmpeg for video chunking and processing
+**AI / ML Engine**
+- Python 3.10, Ultralytics YOLO (Object Detection)
+- EasyOCR & OpenAI Whisper (Visual OCR & Speech Transcription)
+- Groq AI LLM (`gpt-oss-20b`) for threat decision synthesis
+- FFmpeg for video normalization and frame chunking
 
-**Infrastructure**
-- Docker Compose (Redis)
-- Concurrent worker architecture (fast + slow queues)
+**Infrastructure & Deployment**
+- **Docker** Containerized Deployment on **Render**
+- Dual Worker Architecture (Fast Detection Queue + Slow Deep-Dive Queue)
 
 ## Key Features
 
