@@ -2,11 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
+const { getFfmpegPath } = require('./envUtil');
+
 const videoDirs = [
     path.join(__dirname, '..', 'public', 'videos'),
     path.join(__dirname, '..', 'videos')
 ];
-const ffmpegPath = '/home/shaurya/miniconda3/envs/security_cam/bin/ffmpeg';
+const ffmpegPath = getFfmpegPath();
 
 // Memory locks
 const processing = new Set();
@@ -84,18 +86,21 @@ const startOptimizer = () => {
             fs.readdirSync(videoDir).forEach(f => optimizeVideo(videoDir, f));
         }
 
-        // Pass 2: Watch directory infinitely for drag-and-drop or web uploads
+        // Pass 2: Watch directory for drag-and-drop or web uploads safely
         if (fs.existsSync(videoDir)) {
-            fs.watch(videoDir, (eventType, filename) => {
-                if (filename && eventType === 'rename') {
-                    // Delay slightly to ensure file transfer/writing is complete before FFmpeg locks it
-                    setTimeout(() => {
-                        if (fs.existsSync(path.join(videoDir, filename))) {
-                            optimizeVideo(videoDir, filename);
-                        }
-                    }, 500);
-                }
-            });
+            try {
+                fs.watch(videoDir, { persistent: false }, (eventType, filename) => {
+                    if (filename && eventType === 'rename') {
+                        setTimeout(() => {
+                            if (fs.existsSync(path.join(videoDir, filename))) {
+                                optimizeVideo(videoDir, filename);
+                            }
+                        }, 500);
+                    }
+                });
+            } catch (err) {
+                console.warn(`[VIDEO NORMALIZER] Directory watch fallback on ${videoDir}: ${err.message}`);
+            }
         }
     });
 };
