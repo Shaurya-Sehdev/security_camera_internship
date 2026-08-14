@@ -89,8 +89,8 @@ async function startServer() {
   try {
     await connectMongoDB({ workerName: "Main App" });
     
-    app.listen(PORT, () => {
-      logger.success(`Server running at http://localhost:${PORT}`);
+    app.listen(PORT, "0.0.0.0", () => {
+      logger.success(`Server running at http://0.0.0.0:${PORT}`);
       logger.info(`Environment: ${process.env.NODE_ENV || "development"}`);
     });
   } catch (err) {
