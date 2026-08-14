@@ -96,8 +96,10 @@ connectMongoDB({ workerName: "Main App" }).catch((err) => {
   logger.error("Failed to connect MongoDB", err);
 });
 
-// Start background video normalization engine
-require("./utils/videoOptimizer").startOptimizer();
+// Start background video normalization engine (on demand)
+if (process.env.NODE_ENV !== "production") {
+  require("./utils/videoOptimizer").startOptimizer();
+}
 
 const shutdown = async () => {
   logger.info("Shutting down gracefully...");

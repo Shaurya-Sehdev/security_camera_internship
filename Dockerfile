@@ -27,4 +27,4 @@ COPY . .
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["node", "app.js"]
+CMD ["node", "--max-old-space-size=384", "app.js"]
