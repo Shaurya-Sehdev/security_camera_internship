@@ -408,7 +408,7 @@ class SlideAnalyzer:
             req = urllib.request.Request(
                 "https://api.groq.com/openai/v1/chat/completions",
                 data=json.dumps({
-                    "model": "llama-3.1-8b-instant",
+                    "model": "gpt-oss-20b",
                     "temperature": 0,
                     "response_format": {"type": "json_object"},
                     "messages": [
