@@ -41,14 +41,18 @@ if (!DB_PATH) {
   process.exit(1);
 }
 
-const store = new MongoDBStore({
-  uri: DB_PATH,
-  collection: "sessions",
-});
-
-store.on("error", (error) => {
-  logger.error("Session Store Error", error);
-});
+let store;
+try {
+  store = new MongoDBStore({
+    uri: DB_PATH,
+    collection: "sessions",
+  });
+  store.on("error", (error) => {
+    logger.warn("MongoDB Session Store warning, using memory fallback:", error.message);
+  });
+} catch (e) {
+  logger.warn("Session store fallback to memory.");
+}
 
 app.use(
   session({
@@ -58,7 +62,7 @@ app.use(
     store: store,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   })
