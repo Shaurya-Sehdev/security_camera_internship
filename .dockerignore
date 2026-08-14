@@ -1,0 +1,9 @@
+node_modules
+.env
+.env.*
+!.env.example
+*.log
+runs/
+__pycache__/
+*.pt
+public/videos/*_temp_chunks/
