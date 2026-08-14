@@ -41,38 +41,11 @@ if (!DB_PATH) {
   process.exit(1);
 }
 
-let store;
-try {
-  store = new MongoDBStore({
-    uri: DB_PATH,
-    collection: "sessions",
-    connectionOptions: {
-      serverSelectionTimeoutMS: 10000
-    }
-  });
-  store.on("error", (error) => {
-    logger.warn("MongoDB Session Store error ignored, session running:", error.message);
-  });
-} catch (e) {
-  logger.warn("Session store initialized with memory fallback.");
-}
-
-// Suppress unhandled connect-mongodb-session errors from crashing the process
-process.on('uncaughtException', (err) => {
-  if (err && err.message && err.message.includes('connect-mongodb-session')) {
-    logger.warn("Caught connect-mongodb-session DNS error:", err.message);
-  } else {
-    logger.error("Uncaught Exception:", err);
-    process.exit(1);
-  }
-});
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "CHANGE_THIS_IN_PRODUCTION",
     resave: false,
     saveUninitialized: false,
-    store: store,
     cookie: {
       httpOnly: true,
       secure: false,
